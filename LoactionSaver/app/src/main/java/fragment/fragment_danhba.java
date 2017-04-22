@@ -1,6 +1,7 @@
 package fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,12 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thekiet.loactionsaver.R;
+import com.example.thekiet.loactionsaver.ThongTinViTri;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class fragment_danhba extends Fragment {
 
         // tạo dữ liệu cho listdulieu;
 
-        ItemDanhBa item1=new ItemDanhBa("Kiệt","Địa chỉ 1"," 0153245874","Note 1",R.drawable.icon_menu);
+        ItemDanhBa item1=new ItemDanhBa("Kiệt","P. 12, Quận 5, Thành phố Hồ Chí Minh"," 0153245874","Note 1",R.drawable.icon_menu);
         listdulieu.add(item1);
         ItemDanhBa item2=new ItemDanhBa("Lâm","Địa chỉ 2"," 01683522356","Note 2",R.drawable.icon_menu);
         listdulieu.add(item2);
@@ -54,10 +54,20 @@ public class fragment_danhba extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ItemDanhBa duocchon=listdulieu.get(position);
 
-                Toast.makeText(getContext(), duocchon.getTen()+"\n"
-                                            +duocchon.getSDT()+"\n"
-                                            +duocchon.getDiaChi()
-                                , Toast.LENGTH_SHORT).show();
+                // hien thi chi tiet mot item
+
+                Intent intent=new Intent(getActivity() ,ThongTinViTri.class);
+                Bundle mybundle=new Bundle();
+                mybundle.putString("Ten",duocchon.getTen());
+                mybundle.putString("DiaChi",duocchon.getDiaChi());
+                mybundle.putString("SDT",duocchon.getSDT());
+                mybundle.putString("Note",duocchon.getNote());
+                mybundle.putInt("HinhAnh",duocchon.getHinhAnh());
+
+                intent.putExtras(mybundle);
+                getActivity().startActivity(intent);
+
+
             }
         });
 

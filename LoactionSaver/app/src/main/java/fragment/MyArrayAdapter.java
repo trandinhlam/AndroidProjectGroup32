@@ -2,6 +2,7 @@ package fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +48,6 @@ public class MyArrayAdapter extends ArrayAdapter<ItemDanhBa>{
 
             imgItem.setImageResource(R.drawable.icon_menu);
             txtTenItem.setText(itemchon.getTen());
-
 
         }
 
