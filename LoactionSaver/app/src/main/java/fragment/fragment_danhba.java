@@ -57,6 +57,7 @@ public class fragment_danhba extends Fragment {
                 // hien thi chi tiet mot item
                 Intent intent=new Intent(getActivity() ,ThongTinViTri.class);
                 Bundle mybundle=new Bundle();
+                mybundle.putInt("Id",duocchon.getId());
                 mybundle.putString("Ten",duocchon.getTen());
                 mybundle.putString("DiaChi",duocchon.getDiaChi());
                 mybundle.putString("SDT",duocchon.getSDT());

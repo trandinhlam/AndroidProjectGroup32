@@ -59,11 +59,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void createDefaultDataIfNeed(){
         int count=this.getItemsCount();
         if(0==count){// nếu dữ liệu rỗng
-            ItemDanhBa item1=new ItemDanhBa(1, "Kiệt","P. 12, Quận 5, Thành phố Hồ Chí Minh"," 0153245874","Note 1", R.drawable.icon_menu);
+            ItemDanhBa item1=new ItemDanhBa(1, "Kiệt","P. 12, Quận 5, Thành phố Hồ Chí Minh"," 0153245874","Note 1",0);
             this.addItem(item1);
-            ItemDanhBa item2=new ItemDanhBa(2, "Lâm","Địa chỉ 2"," 01683522356","Note 2",R.drawable.icon_menu);
+            ItemDanhBa item2=new ItemDanhBa(2, "Lâm","Địa chỉ 2"," 01683522356","Note 2",0);
             this.addItem(item2);
-            ItemDanhBa item3=new ItemDanhBa(3, "Long","Địa chỉ 3"," 0153245874","Note 3",R.drawable.icon_menu);
+            ItemDanhBa item3=new ItemDanhBa(3, "Long","Địa chỉ 3"," 0153245874","Note 3",0);
             this.addItem(item3);
         }
     }
