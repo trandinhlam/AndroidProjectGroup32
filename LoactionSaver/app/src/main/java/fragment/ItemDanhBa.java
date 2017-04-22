@@ -7,6 +7,16 @@ import android.media.Image;
  */
 
 public class ItemDanhBa {
+    private int Id;
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
+    }
+
     private String Ten;
     private String DiaChi;
     private String SDT;
@@ -16,7 +26,8 @@ public class ItemDanhBa {
     public ItemDanhBa() {
     }
 
-    public ItemDanhBa(String ten, String diaChi, String SDT, String note, int hinhAnh) {
+    public ItemDanhBa(int id, String ten, String diaChi, String SDT, String note, int hinhAnh) {
+        Id = id;
         Ten = ten;
         DiaChi = diaChi;
         this.SDT = SDT;

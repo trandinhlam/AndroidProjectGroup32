@@ -17,6 +17,8 @@ import com.example.thekiet.loactionsaver.ThongTinViTri;
 
 import java.util.ArrayList;
 
+import data.MyDatabaseHelper;
+
 /**
  * Created by TheKiet on 4/18/2017.
  */
@@ -31,12 +33,10 @@ public class fragment_danhba extends Fragment {
 
         // tạo dữ liệu cho listdulieu;
 
-        ItemDanhBa item1=new ItemDanhBa("Kiệt","P. 12, Quận 5, Thành phố Hồ Chí Minh"," 0153245874","Note 1",R.drawable.icon_menu);
-        listdulieu.add(item1);
-        ItemDanhBa item2=new ItemDanhBa("Lâm","Địa chỉ 2"," 01683522356","Note 2",R.drawable.icon_menu);
-        listdulieu.add(item2);
-        ItemDanhBa item3=new ItemDanhBa("Long","Địa chỉ 3"," 0153245874","Note 3",R.drawable.icon_menu);
-        listdulieu.add(item3);
+        MyDatabaseHelper db=new MyDatabaseHelper(this.getContext());
+        db.createDefaultDataIfNeed();
+
+        listdulieu=db.getAllItems();
 
 
         View layout_danhba=inflater.inflate(R.layout.fragment_danhba, container,false);
@@ -55,7 +55,6 @@ public class fragment_danhba extends Fragment {
                 ItemDanhBa duocchon=listdulieu.get(position);
 
                 // hien thi chi tiet mot item
-
                 Intent intent=new Intent(getActivity() ,ThongTinViTri.class);
                 Bundle mybundle=new Bundle();
                 mybundle.putString("Ten",duocchon.getTen());
