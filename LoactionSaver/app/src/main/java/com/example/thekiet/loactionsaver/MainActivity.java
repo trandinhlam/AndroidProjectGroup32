@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         setupViewPager(mViewPager);
         mViewPager.setOffscreenPageLimit(3);
-        //mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tablayout = (TabLayout) findViewById(R.id.tabs);
         tablayout.setupWithViewPager(mViewPager);
@@ -59,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mSectionsPagerAdapter.addFragment(new fragment_map(), "Bản Đồ");
+
+
+
+        // chỗ này cần tạo Bundle để truyền dữ liệu cho Fragment xử lí, tạm thời để Fragment tự khởi tạo dữ liệu
         mSectionsPagerAdapter.addFragment(new fragment_danhba(), "Danh Bạ");
         mSectionsPagerAdapter.addFragment(new fragment_likelist(), "Yêu Thích");
         viewPager.setAdapter(mSectionsPagerAdapter);
