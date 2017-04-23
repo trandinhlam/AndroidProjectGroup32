@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
 
     <fragment
         android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/layout_search"
+        layout="@layout/toolbar_search"
+        android:visibility="invisible"
+        />
+
+    <include
+        android:id="@+id/layout_idea"
+        android:visibility="invisible"
+        layout="@layout/toolbar_idea"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fb_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
+        android:layout_marginBottom="70dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="75dp"
         android:src="@drawable/icon_menu"
-        app:backgroundTint="#ffff00" />
+        app:backgroundTint="#7076cc" />
+
+    <include layout="@layout/fab_layout" />
+
+
 </FrameLayout>

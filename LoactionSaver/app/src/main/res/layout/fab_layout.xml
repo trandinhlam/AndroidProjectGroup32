@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fb_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/icon_search"
+        app:backgroundTint="#ffffff" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fb_idea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="16dp"
+        android:layout_gravity="bottom|right"
+        android:src="@drawable/icon_idea"
+        app:backgroundTint="#ffffff"
+        />
+
+    <TextView
+        android:id="@+id/textViewSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="85dp"
+
+        android:textSize="16dp"
+        android:textColor="#ffffff"
+        android:layout_gravity="bottom|right"
+        android:text="Tìm Kiếm"
+        android:visibility="invisible"
+        android:padding="5dp"
+        android:background="#359706"
+        />
+
+    <TextView
+        android:id="@+id/textViewIdea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="85dp"
+        android:padding="5dp"
+
+        android:textSize="16dp"
+        android:textColor="#ffffff"
+        android:layout_gravity="bottom|right"
+        android:text="Gợi Ý"
+        android:visibility="invisible"
+        android:background="#359706"
+
+        />
+
+</FrameLayout>
