@@ -1,6 +1,7 @@
 package fragment;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.thekiet.loactionsaver.R;
+import com.example.thekiet.loactionsaver.Them_CapNhatDanhBa_Activity;
 import com.example.thekiet.loactionsaver.ThongTinViTri;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class fragment_danhba extends Fragment {
     private static final int MENU_ITEM_CREATE =222 ;
     private static final int MENU_ITEM_EDIT =333 ;
     private static final int MENU_ITEM_DELETE =444 ;
+    private static final int MY_REQUEST_CODE =10 ;
     TextView tbao;
     ListView lvdanhba;
     ArrayList<ItemDanhBa> listdulieu=new ArrayList<ItemDanhBa>();
@@ -86,6 +89,20 @@ public class fragment_danhba extends Fragment {
         intent.putExtras(mybundle);
         getActivity().startActivity(intent);
     }
+    private void UpDateItem(ItemDanhBa duocchon){
+        // hien thi chi tiet mot item
+        Intent intent=new Intent(getActivity() ,Them_CapNhatDanhBa_Activity.class);
+        Bundle mybundle=new Bundle();
+        mybundle.putInt("Id",duocchon.getId());
+        mybundle.putString("Ten",duocchon.getTen());
+        mybundle.putString("DiaChi",duocchon.getDiaChi());
+        mybundle.putString("SDT",duocchon.getSDT());
+        mybundle.putString("Note",duocchon.getNote());
+        mybundle.putInt("HinhAnh",duocchon.getHinhAnh());
+
+        intent.putExtras(mybundle);
+        this.startActivityForResult(intent,MY_REQUEST_CODE);
+    }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view,
                                     ContextMenu.ContextMenuInfo menuInfo)    {
@@ -121,7 +138,7 @@ public class fragment_danhba extends Fragment {
                 break;
             case MENU_ITEM_EDIT:
                 {
-
+                    UpDateItem(duocchon);
                 }
                 break;
             case MENU_ITEM_DELETE:
@@ -144,9 +161,22 @@ public class fragment_danhba extends Fragment {
         }
         return true;
     }
-
-    public void updateStatus(ItemDanhBa itemdeleted){
-        this.listdulieu.remove(itemdeleted);
-        adapter.notifyDataSetChanged();
+    // Khi một Activity hoàn thành thì nó gửi phản hồi lại, ta cần override hàm dưới đây để xử lí phản hồi
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == MY_REQUEST_CODE ) {
+            boolean needRefresh = data.getBooleanExtra("needRefresh",true);
+            // Refresh ListView
+            if(needRefresh) {
+                this.listdulieu.clear();
+                MyDatabaseHelper db = new MyDatabaseHelper(this.getActivity());
+                listdulieu=  db.getAllItems();
+                // Thông báo dữ liệu thay đổi (Để refresh ListView).
+                this.adapter.notifyDataSetChanged();
+                db.close();
+            }
+        }
     }
+
+
 }
