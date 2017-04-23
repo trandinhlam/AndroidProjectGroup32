@@ -129,4 +129,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return (ArrayList<ItemDanhBa>) list;
     }
+
+    public void deleteItem(ItemDanhBa item) {
+        Log.i(TAG, "MyDatabaseHelper.deleteItem ... " + item.getTen() );
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_DanhBa, COLUMN_ID + " = ?",
+                new String[] { String.valueOf(item.getId())});
+        db.close();
+    }
 }

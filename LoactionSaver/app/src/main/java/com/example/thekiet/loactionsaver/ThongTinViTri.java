@@ -22,7 +22,6 @@ public class ThongTinViTri extends Activity {
     ItemDanhBa item;
     TextView txtTen,txtDiachi,txtDT, txtnote;
     ImageView hinh;
-    Button btnSua,btnXoa;
     Activity currentAct;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,28 +38,6 @@ public class ThongTinViTri extends Activity {
 
         hinh= (ImageView) findViewById(R.id.hinhanhchitiet);
 
-        btnXoa=(Button) findViewById(R.id.btnXoa);
-        btnXoa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(currentAct)
-                        .setMessage("Bạn chắc chắn muốn xóa "+item.getTen() +" ra khỏi danh bạ?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                               //Nếu đồng ý thì xóa
-                                MyDatabaseHelper db = new MyDatabaseHelper(currentAct);
-                                //db.deleteItem(item);
-
-                                //quay lại màn hình fragment_danhba và cập nhật lại listview
-
-
-                            }
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
-            }
-        });
 
         Intent intentExtras=getIntent();
         Bundle mybundle=intentExtras.getExtras();
