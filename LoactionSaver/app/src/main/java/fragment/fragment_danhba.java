@@ -173,8 +173,11 @@ public class fragment_danhba extends Fragment {
                 MyDatabaseHelper db = new MyDatabaseHelper(this.getContext());
                 this.listdulieu =  db.getAllItems();
                 db.close();
+                adapter = (MyArrayAdapter) new MyArrayAdapter(this.getActivity(),
+                        R.layout.itemdanhba_layout,listdulieu);
+                lvdanhba.setAdapter(adapter);
                 // Thông báo dữ liệu thay đổi (Để refresh ListView).
-                this.adapter.notifyDataSetChanged();
+
                 Log.i("ThongBao","RefreshListview....size="+ listdulieu.size());
             }
         }

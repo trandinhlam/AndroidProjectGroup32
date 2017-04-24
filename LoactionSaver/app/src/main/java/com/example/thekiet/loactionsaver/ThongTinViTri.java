@@ -23,6 +23,7 @@ public class ThongTinViTri extends Activity {
     TextView txtTen,txtDiachi,txtDT, txtnote;
     ImageView hinh;
     Activity currentAct;
+    Button btnChiDuong;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,7 @@ public class ThongTinViTri extends Activity {
         txtnote =(TextView) findViewById(R.id.Note);
 
         hinh= (ImageView) findViewById(R.id.hinhanhchitiet);
-
+        btnChiDuong=(Button) findViewById(R.id.btnChiDuong);
 
         Intent intentExtras=getIntent();
         Bundle mybundle=intentExtras.getExtras();
@@ -59,7 +60,6 @@ public class ThongTinViTri extends Activity {
         else {
             Toast.makeText(getApplicationContext(), "Lỗi truyền dữ liệu", Toast.LENGTH_SHORT).show();
         }
-
 
 
 

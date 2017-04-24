@@ -51,8 +51,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop table
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DanhBa);
-
-
         // Recreate
         onCreate(db);
     }
