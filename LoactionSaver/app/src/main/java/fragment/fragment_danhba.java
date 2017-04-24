@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -169,11 +170,12 @@ public class fragment_danhba extends Fragment {
             // Refresh ListView
             if(needRefresh) {
                 this.listdulieu.clear();
-                MyDatabaseHelper db = new MyDatabaseHelper(this.getActivity());
-                listdulieu=  db.getAllItems();
+                MyDatabaseHelper db = new MyDatabaseHelper(this.getContext());
+                this.listdulieu =  db.getAllItems();
+                db.close();
                 // Thông báo dữ liệu thay đổi (Để refresh ListView).
                 this.adapter.notifyDataSetChanged();
-                db.close();
+                Log.i("ThongBao","RefreshListview....size="+ listdulieu.size());
             }
         }
     }

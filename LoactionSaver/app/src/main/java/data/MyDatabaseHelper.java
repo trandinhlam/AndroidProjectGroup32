@@ -68,7 +68,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    private void addItem(ItemDanhBa item1) {
+    public void addItem(ItemDanhBa item1) {
         Log.i(TAG, "MyDatabaseHelper.addItem ... " + item1.getTen());
         // mở kết nối database
         SQLiteDatabase db = this.getWritableDatabase();
@@ -80,7 +80,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_NOTE,item1.getNote());
 
 
-        // Trèn một dòng dữ liệu vào bảng.
+        // chèn một dòng dữ liệu vào bảng.
         db.insert(TABLE_DanhBa, null, values);
         // Đóng kết nối database.
         db.close();
@@ -122,6 +122,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                                                   cursor.getString(4),
                                                   cursor.getInt(5));
                 list.add(newitem);
+                Log.i(TAG,"\n..."+newitem.getTen());
+
+
             }
             while(cursor.moveToNext());
         }
@@ -137,5 +140,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_DanhBa, COLUMN_ID + " = ?",
                 new String[] { String.valueOf(item.getId())});
         db.close();
+    }
+
+    public int updateItem(ItemDanhBa item) {
+        Log.i(TAG, "MyDatabaseHelper.updateItem ... "  + item.getTen());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, item.getTen());
+        values.put(COLUMN_ADDRESS,item.getDiaChi());
+        values.put(COLUMN_PHONE,item.getSDT());
+        values.put(COLUMN_NOTE,item.getNote());
+
+        // updating row
+        int kq= db.update(TABLE_DanhBa, values, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(item.getId())});
+        db.close();
+        return kq;
     }
 }
