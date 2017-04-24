@@ -43,18 +43,14 @@ public class ThongTinViTri extends Activity {
         Intent intentExtras=getIntent();
         Bundle mybundle=intentExtras.getExtras();
         if(!mybundle.isEmpty()){
-                item=new ItemDanhBa(mybundle.getInt("Id"),mybundle.getString("Ten"),
-                                    mybundle.getString("DiaChi"),
-                                    mybundle.getString("SDT"),
-                                    mybundle.getString("Note"),
-                                    0);
+                item= (ItemDanhBa) mybundle.getSerializable("item");
 
-                txtTen.setText(mybundle.getString("Ten"));
-                txtDiachi.setText("Địa chỉ: "+mybundle.getString("DiaChi"));
-                txtDT.setText("ĐT: "+mybundle.getString("SDT"));
-                txtnote.setText("Note: \n\t"+mybundle.getString("Note"));
+               txtTen.setText(item.getTen());
+            txtDiachi.setText("Địa chỉ: "+item.getDiaChi());
+            txtDT.setText("ĐT: "+item.getSDT());
+            txtnote.setText("Note: \n\t"+item.getNote());
                 //hinh.setImageResource(mybundle.getInt("HinhAnh"));
-                hinh.setImageResource(R.drawable.icon_menu);// hình ảnh tượng trưng
+            hinh.setImageResource(R.drawable.icon_menu);// hình ảnh tượng trưng
 
         }
         else {

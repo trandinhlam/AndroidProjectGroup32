@@ -19,12 +19,14 @@ import fragment.ItemDanhBa;
  */
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME ="db";
-    private static final int DATABASE_VERSION = 1 ;
+    private static final String DATABASE_NAME ="db1";
+    private static final int DATABASE_VERSION =1 ;
     private static final String TABLE_DanhBa ="danhba";
-    private static final String COLUMN_ID ="ID" ;
+    private static final String COLUMN_ID ="ID";
     private static final String COLUMN_NAME ="Ten" ;
     private static final String COLUMN_ADDRESS ="DiaChi" ;
+    private static final String COLUMN_LATITUDE="Latitude";
+    private static final String COLUMN_LONGTITUDE="Longtitude";
     private static final String COLUMN_PHONE ="SDT" ;
     private static final String COLUMN_NOTE ="Note" ;
     private static final String COLUMN_IMAGE ="HinhAnh" ;
@@ -40,6 +42,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_ID + " INTEGER PRIMARY KEY, "
                 + COLUMN_NAME+ " TEXT, "
                 + COLUMN_ADDRESS+ " TEXT, "
+                + COLUMN_LATITUDE + " REAL, "
+                + COLUMN_LONGTITUDE + " REAL, "
                 + COLUMN_PHONE+ " TEXT, "
                 + COLUMN_NOTE + " TEXT, "
                 + COLUMN_IMAGE + " TEXT"+")";
@@ -74,6 +78,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, item1.getTen());
         values.put(COLUMN_ADDRESS,item1.getDiaChi());
+        values.put(COLUMN_LATITUDE,item1.getLatitude());
+        values.put(COLUMN_LONGTITUDE,item1.getLongtitude());
         values.put(COLUMN_PHONE,item1.getSDT());
         values.put(COLUMN_NOTE,item1.getNote());
 
@@ -116,11 +122,14 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 ItemDanhBa newitem=new ItemDanhBa(cursor.getInt(0),
                                                   cursor.getString(1),
                                                   cursor.getString(2),
-                                                  cursor.getString(3),
-                                                  cursor.getString(4),
-                                                  cursor.getInt(5));
+                                                  cursor.getDouble(3),
+                                                  cursor.getDouble(4),
+                                                  cursor.getString(5),
+                                                  cursor.getString(6),
+                                                  cursor.getInt(7));
                 list.add(newitem);
-                Log.i(TAG,"\n..."+newitem.getTen());
+                Log.i(TAG,"\n..."+newitem.getTen()
+                        +"("+newitem.getLatitude()+","+newitem.getLongtitude()+")");
 
 
             }
@@ -148,6 +157,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, item.getTen());
         values.put(COLUMN_ADDRESS,item.getDiaChi());
+        values.put(COLUMN_LATITUDE,item.getLatitude());
+        values.put(COLUMN_LONGTITUDE,item.getLongtitude());
         values.put(COLUMN_PHONE,item.getSDT());
         values.put(COLUMN_NOTE,item.getNote());
 

@@ -22,6 +22,7 @@ import com.example.thekiet.loactionsaver.R;
 import com.example.thekiet.loactionsaver.Them_CapNhatDanhBa_Activity;
 import com.example.thekiet.loactionsaver.ThongTinViTri;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import data.MyDatabaseHelper;
@@ -78,29 +79,18 @@ public class fragment_danhba extends Fragment {
     }
     private void showItem(ItemDanhBa duocchon){
         // hien thi chi tiet mot item
-        Intent intent=new Intent(getActivity() ,ThongTinViTri.class);
+        Intent intent=new Intent(getActivity().getBaseContext() ,ThongTinViTri.class);
         Bundle mybundle=new Bundle();
-        mybundle.putInt("Id",duocchon.getId());
-        mybundle.putString("Ten",duocchon.getTen());
-        mybundle.putString("DiaChi",duocchon.getDiaChi());
-        mybundle.putString("SDT",duocchon.getSDT());
-        mybundle.putString("Note",duocchon.getNote());
-        mybundle.putInt("HinhAnh",duocchon.getHinhAnh());
 
+        mybundle.putSerializable("item", (Serializable) duocchon);
         intent.putExtras(mybundle);
         getActivity().startActivity(intent);
     }
     private void UpDateItem(ItemDanhBa duocchon){
         // hien thi chi tiet mot item
-        Intent intent=new Intent(getActivity() ,Them_CapNhatDanhBa_Activity.class);
+        Intent intent=new Intent(getActivity().getBaseContext() ,Them_CapNhatDanhBa_Activity.class);
         Bundle mybundle=new Bundle();
-        mybundle.putInt("Id",duocchon.getId());
-        mybundle.putString("Ten",duocchon.getTen());
-        mybundle.putString("DiaChi",duocchon.getDiaChi());
-        mybundle.putString("SDT",duocchon.getSDT());
-        mybundle.putString("Note",duocchon.getNote());
-        mybundle.putInt("HinhAnh",duocchon.getHinhAnh());
-
+        mybundle.putSerializable("item", (Serializable) duocchon);
         intent.putExtras(mybundle);
         this.startActivityForResult(intent,MY_REQUEST_CODE);
     }

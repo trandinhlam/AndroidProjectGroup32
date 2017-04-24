@@ -39,17 +39,15 @@ public class Them_CapNhatDanhBa_Activity extends Activity{
 
         Intent intentExtras=getIntent();
         Bundle mybundle=intentExtras.getExtras();
+
         if(null!=mybundle){// neu Bundle rong tuc la muon tao mot Item moi
             this.mode=MODE_EDIT;
-            item=new ItemDanhBa(mybundle.getInt("Id"),mybundle.getString("Ten"),
-                    mybundle.getString("DiaChi"),
-                    mybundle.getString("SDT"),
-                    mybundle.getString("Note"),
-                    0);
-            textTen.setText(mybundle.getString("Ten"));
-            textDiaChi.setText(mybundle.getString("DiaChi"));
-            textSDT.setText(mybundle.getString("SDT"));
-            textNote.setText(mybundle.getString("Note"));
+            item= (ItemDanhBa) mybundle.getSerializable("item");
+
+            textTen.setText(item.getTen());
+            textDiaChi.setText(item.getDiaChi());
+            textSDT.setText(item.getSDT());
+            textNote.setText(item.getNote());
             //hinh.setImageResource(mybundle.getInt("HinhAnh"));
             //hinh.setImageResource(R.drawable.icon_menu);// hình ảnh tượng trưng
 
@@ -119,8 +117,6 @@ public class Them_CapNhatDanhBa_Activity extends Activity{
     @Override
     public void finish() {
         // trả vể kết quả cho Activity trước
-
-
 
         Intent data = new Intent();
         // Yêu cầu MainActivity refresh lại ListView hoặc không.
