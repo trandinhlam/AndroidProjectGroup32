@@ -28,6 +28,7 @@ import com.example.thekiet.loactionsaver.AddDanhBa;
 import com.example.thekiet.loactionsaver.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
+
 import Class.*;
 
 import static android.R.attr.y;
@@ -174,7 +177,7 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
                 ViTriSearch = editSearch.getText() + "";
                 List<Address> listAddress = null;
                 if (!ViTriSearch.equals("")) {
-                    Geocoder geocoder = new Geocoder(getContext());
+                    Geocoder geocoder = new Geocoder(getContext(), Locale.forLanguageTag("vi"));
                     try {
                         listAddress = geocoder.getFromLocationName(ViTriSearch, 1);
                     } catch (IOException e) {

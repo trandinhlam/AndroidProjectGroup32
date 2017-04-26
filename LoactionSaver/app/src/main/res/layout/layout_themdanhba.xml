@@ -76,13 +76,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:lines="3"
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"
                 android:textColor="#007697"
                 android:textSize="8pt" />
+            <Button
+                android:id="@+id/btnTim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="Tìm"/>
         </LinearLayout>
 
         <View

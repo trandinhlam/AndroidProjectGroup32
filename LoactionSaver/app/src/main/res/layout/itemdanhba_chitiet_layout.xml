@@ -38,6 +38,7 @@
             android:id="@+id/DiaChi"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Địa chỉ:"
             android:textColor="@color/textcolor1"
             android:paddingLeft="@dimen/fab_margin"
@@ -45,8 +46,9 @@
             android:textSize="@dimen/Itemtextsize2"/>
         <Button
             android:id="@+id/btnChiDuong"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
+
             android:text="Chỉ đường"/>
     </LinearLayout>
 
@@ -68,7 +70,7 @@
         android:background="@android:color/darker_gray"/>
     <TextView
         android:id="@+id/Note"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Note: \n\n\n"
         android:textColor="@color/textcolor1"

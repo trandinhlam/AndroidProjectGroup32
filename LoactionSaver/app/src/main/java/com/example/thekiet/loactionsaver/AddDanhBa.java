@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class AddDanhBa extends Activity {
     EditText edit_Ten, edit_DiaChi, edit_Note;
     ImageView btn_Add, anhTai1, anhTai2, anhChup1, anhChup2;
     int Checkanh1 = 0, Checkanh2 = 0;
+    Button btnTim;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +82,19 @@ public class AddDanhBa extends Activity {
             }
         });
 
+        btnTim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Timvitri = new Intent(getApplication(), TimViTri.class);
+                startActivityForResult(Timvitri, -1);
+            }
+        });
+
     }
 
     private void Anhxa()
     {
+        btnTim = (Button)findViewById(R.id.btnTim);
         edit_Ten = (EditText)findViewById(R.id.tvten_add);
         edit_DiaChi = (EditText)findViewById(R.id.tvdiachi_add);
         edit_Note= (EditText)findViewById(R.id.tvnote_add);
