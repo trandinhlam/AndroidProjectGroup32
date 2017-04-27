@@ -178,6 +178,7 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
                 List<Address> listAddress = null;
                 if (!ViTriSearch.equals("")) {
                     Geocoder geocoder = new Geocoder(getContext(), Locale.forLanguageTag("vi"));
+
                     try {
                         listAddress = geocoder.getFromLocationName(ViTriSearch, 1);
                     } catch (IOException e) {

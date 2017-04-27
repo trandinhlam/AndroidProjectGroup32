@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -18,8 +19,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.GeoDataApi;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
@@ -28,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,11 +39,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InterfaceAddress;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -51,24 +59,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.AutoCompleteTextView;
 import android.widget.SimpleAdapter;
+
 import Class.*;
 
+import static java.lang.Long.parseLong;
 
 
 /**
  * Created by TheKiet on 4/25/2017.
  */
 
-public class TimViTri extends FragmentActivity implements OnMapReadyCallback {
+public class TimViTri extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap map;
+    LatLng tmp;
     private static final String LOG_TAG = "GGPlaces Autocomplete";
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
 
     private static final String OUT_JSON = "/json";
 
-    private static final String API_KEY = "AIzaSyBWPwvayZA3uJKBdiPHU0lhcTDW3Pk3l9Y";
+    private static final String API_KEY = "AIzaSyCuvb4nDjQONv7nqV9igaOn6cC7l2uRwn8";
 
 
     PlacesTask placesTask;
@@ -78,12 +89,14 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback {
 
     AutoCompleteTextView autodiachi;
     Button btnok;
-    private GoogleApiClient mGoogleApiClient;;
+    private GoogleApiClient mGoogleApiClient;    ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_timvitri);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -99,7 +112,7 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long arg3) {
-                Toast.makeText(getApplication(), "your selected item"+String.valueOf(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), "your selected item" + String.valueOf(position), Toast.LENGTH_SHORT).show();
                 autodiachi.setText("123");
                 Object item = arg0.getItemAtPosition(position);
                 //s1.get(position) is name selected from autocompletetextview
@@ -113,8 +126,14 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback {
         btnok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placesTask = new PlacesTask();
-                placesTask.execute(autodiachi.getText()+"".toString());
+
+               /* placesTask = new PlacesTask();
+                placesTask.execute(autodiachi.getText()+"".toString());*/
+
+                Getlaln getlaln = new Getlaln();
+               getlaln.execute("123");
+
+
             }
         });
 
@@ -141,144 +160,153 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback {
 
     }
 
-        private String downloadUrl(String strUrl) throws IOException{
+    private String downloadUrl(String strUrl) throws IOException {
+        String data = "";
+        InputStream iStream = null;
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL(strUrl);
+
+            // Creating an http connection to communicate with url
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            // Connecting to url
+            urlConnection.connect();
+
+            // Reading data from url
+            iStream = urlConnection.getInputStream();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+            StringBuffer sb = new StringBuffer();
+
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            data = sb.toString();
+
+            br.close();
+
+        } catch (Exception e) {
+            Log.d("Exception", e.toString());
+        } finally {
+            iStream.close();
+            urlConnection.disconnect();
+        }
+        return data;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(this,
+                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    // Fetches all places from GooglePlaces AutoComplete Web Service
+    private class PlacesTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... place) {
+            // For storing data from web service
             String data = "";
-            InputStream iStream = null;
-            HttpURLConnection urlConnection = null;
-            try{
-                URL url = new URL(strUrl);
 
-                // Creating an http connection to communicate with url
-                urlConnection = (HttpURLConnection) url.openConnection();
+            // Obtain browser key from https://code.google.com/apis/console
+            // String key = "key=AIzaSyCNYFQYAqx3LgqPL7YfFwwuMZyy6F-5mdE";
+            String key = "key=" + API_KEY;
+            String input = "";
 
-                // Connecting to url
-                urlConnection.connect();
+            try {
+                input = "input=" + URLEncoder.encode(place[0], "utf-8");
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
 
-                // Reading data from url
-                iStream = urlConnection.getInputStream();
+            // place type to be searched
+            String types = "types=geocode";
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+            // Sensor enabled
+            String sensor = "sensor=false";
 
-                StringBuffer sb = new StringBuffer();
+            // Building the parameters to the web service
+            String parameters = input + "&" + types + "&" + sensor + "&" + key;
 
-                String line = "";
-                while( ( line = br.readLine()) != null){
-                    sb.append(line);
-                }
+            // Output format
+            String output = "json";
 
-                data = sb.toString();
+            // Building the url to the web service
+            String url = "https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters + "&components=country:VNM";
 
-                br.close();
-
-            }catch(Exception e){
-                Log.d("Exception", e.toString());
-            }finally{
-                iStream.close();
-                urlConnection.disconnect();
+            try {
+                // Fetching the data from we service
+                data = downloadUrl(url);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
             }
             return data;
         }
 
-        // Fetches all places from GooglePlaces AutoComplete Web Service
-        private class PlacesTask extends AsyncTask<String, Void, String>{
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
 
-            @Override
-            protected String doInBackground(String... place) {
-                // For storing data from web service
-                String data = "";
+            // Creating ParserTask
+            parserTask = new ParserTask();
 
-                // Obtain browser key from https://code.google.com/apis/console
-               // String key = "key=AIzaSyCNYFQYAqx3LgqPL7YfFwwuMZyy6F-5mdE";
-                String key = "key=AIzaSyCuvb4nDjQONv7nqV9igaOn6cC7l2uRwn8";
-                String input="";
-
-                try {
-                    input = "input=" + URLEncoder.encode(place[0], "utf-8");
-                } catch (UnsupportedEncodingException e1) {
-                    e1.printStackTrace();
-                }
-
-                // place type to be searched
-                String types = "types=geocode";
-
-                // Sensor enabled
-                String sensor = "sensor=false";
-
-                // Building the parameters to the web service
-                String parameters = input+"&"+types+"&"+sensor+"&"+key;
-
-                // Output format
-                String output = "json";
-
-                // Building the url to the web service
-                String url = "https://maps.googleapis.com/maps/api/place/autocomplete/"+output+"?"+parameters+"&components=country:VNM";
-
-                try{
-                    // Fetching the data from we service
-                    data = downloadUrl(url);
-                }catch(Exception e){
-                    Log.d("Background Task",e.toString());
-                }
-                return data;
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-
-                // Creating ParserTask
-                parserTask = new ParserTask();
-
-                // Starting Parsing the JSON string returned by Web Service
-                parserTask.execute(result);
-            }
+            // Starting Parsing the JSON string returned by Web Service
+            parserTask.execute(result);
         }
-        /** A class to parse the Google Places in JSON format */
-        private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String,String>>>{
+    }
 
-            JSONObject jObject;
+    /**
+     * A class to parse the Google Places in JSON format
+     */
+    private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
 
-            @Override
-            protected List<HashMap<String, String>> doInBackground(String... jsonData) {
+        JSONObject jObject;
 
-                List<HashMap<String, String>> places = null;
+        @Override
+        protected List<HashMap<String, String>> doInBackground(String... jsonData) {
 
-                PlaceJSONParser placeJsonParser = new PlaceJSONParser();
+            List<HashMap<String, String>> places = null;
 
-                try{
-                    jObject = new JSONObject(jsonData[0]);
+            PlaceJSONParser placeJsonParser = new PlaceJSONParser();
 
-                    // Getting the parsed data as a List construct
-                    places = placeJsonParser.parse(jObject);
+            try {
+                jObject = new JSONObject(jsonData[0]);
 
-                }catch(Exception e){
-                    Log.d("Exception",e.toString());
-                }
-                return places;
+                // Getting the parsed data as a List construct
+                places = placeJsonParser.parse(jObject);
+
+            } catch (Exception e) {
+                Log.d("Exception", e.toString());
             }
-
-            @Override
-            protected void onPostExecute(List<HashMap<String, String>> result) {
-
-                String[] from = new String[] { "description"};
-                int[] to = new int[] { android.R.id.text1 };
-
-                // Creating a SimpleAdapter for the AutoCompleteTextView
-                SimpleAdapter adapter = new SimpleAdapter(getBaseContext(), result, android.R.layout.simple_list_item_1, from, to);
-
-                // Setting the adapter
-                autodiachi.setAdapter(adapter);
-                autodiachi.showDropDown();
-            }
+            return places;
         }
 
         @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
-            // Inflate the menu; this adds items to the action bar if it is present.
-           getMenuInflater().inflate(R.menu.menu_main, menu);
-            return true;
-        }
+        protected void onPostExecute(List<HashMap<String, String>> result) {
 
+            String[] from = new String[]{"description"};
+            int[] to = new int[]{android.R.id.text1};
+
+            // Creating a SimpleAdapter for the AutoCompleteTextView
+            SimpleAdapter adapter = new SimpleAdapter(getBaseContext(), result, android.R.layout.simple_list_item_1, from, to);
+
+            // Setting the adapter
+            autodiachi.setAdapter(adapter);
+            autodiachi.showDropDown();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
 
     @Override
@@ -301,26 +329,74 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback {
     }
 
 
+    private class Getlaln extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... ID_PLACE) {
+            // For storing data from web service
+            String data = "";
+
+            // Obtain browser key from https://code.google.com/apis/console
+            // String key = "key=AIzaSyCNYFQYAqx3LgqPL7YfFwwuMZyy6F-5mdE";
+            String key = "key=" + API_KEY;
+            String input = "";
+
+            try {
+                input = "input=" + URLEncoder.encode(ID_PLACE[0], "utf-8");
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+
+            String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJbWmR-xsvdTERhzE6FwIGMCg&key=AIzaSyCuvb4nDjQONv7nqV9igaOn6cC7l2uRwn8";
+
+            try {
+                // Fetching the data from we service
+                data = downloadUrl(url);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            HashMap<String, String> place = new HashMap<String, String>();
+
+//            String la="";
+//            String ln="";
 
 
+            try {
+                JSONObject jObject = new JSONObject(result);
+               String a  = jObject.getString("result");
+                Toast.makeText(getApplication(), "24", Toast.LENGTH_SHORT).show();
+                JSONObject jObject1 = new JSONObject(a);
 
-    public LatLng getLatLngFromID_Place(String ID_Place)
-    {
-        LatLng tmp = null;
-        Places.GeoDataApi.getPlaceById(mGoogleApiClient, ID_Place)
-                .setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(PlaceBuffer places) {
-                        if (places.getStatus().isSuccess()) {
-                            final Place myPlace = places.get(0);
-//                            LatLng queriedLocation = myPlace.getLatLng();
-                        }
-                        places.release();
-                    }
-                });
+                JSONObject jObject2 = new JSONObject(jObject1.getString("geometry"));
+                JSONObject jObject3 = new JSONObject(jObject2.getString("location"));
 
-        return tmp;
+                 tmp = new LatLng(jObject3.getDouble("lat"), jObject3.getDouble("lng"));
+                map.addMarker(new MarkerOptions().position(tmp).title("123"));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(tmp, 25));
+                map.animateCamera(CameraUpdateFactory.zoomIn());
+                map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+
+//
+//                place.put("lat", );
+//                place.put("lng",id);
+             //   String a = jObject.getString("adr_address.geometry.location.la");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+           // tmp = new LatLng(Long.parseLong(la), Long.parseLong(ln));
+
+            Toast.makeText(getApplication(), "24", Toast.LENGTH_SHORT).show();
+        }
     }
+
 
 
 }
