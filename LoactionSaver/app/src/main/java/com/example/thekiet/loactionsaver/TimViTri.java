@@ -2,15 +2,21 @@ package com.example.thekiet.loactionsaver;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -19,6 +25,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toast;
 
+import com.akexorcist.googledirection.model.Direction;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -31,12 +38,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.InterfaceAddress;
@@ -45,6 +54,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -62,14 +72,19 @@ import android.widget.SimpleAdapter;
 
 import Class.*;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+
+import static com.example.thekiet.loactionsaver.R.id.editSearch;
 import static java.lang.Long.parseLong;
+import static java.security.AccessController.getContext;
 
 
 /**
  * Created by TheKiet on 4/25/2017.
  */
 
-public class TimViTri extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
+public class TimViTri extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, DirectionCallback {
 
     private GoogleMap map;
     LatLng tmp;
@@ -90,6 +105,7 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
     AutoCompleteTextView autodiachi;
     Button btnok;
     private GoogleApiClient mGoogleApiClient;    ;
+    String id_place = "";
 
 
     @Override
@@ -115,11 +131,12 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
                 Toast.makeText(getApplication(), "your selected item" + String.valueOf(position), Toast.LENGTH_SHORT).show();
                 autodiachi.setText("123");
                 Object item = arg0.getItemAtPosition(position);
-                //s1.get(position) is name selected from autocompletetextview
                 HashMap<String, String> place = new HashMap<String, String>();
                 place = (HashMap<String, String>) item;
                 // now you can show the value on textview.
                 autodiachi.setText(place.get("description"));
+                autodiachi.dismissDropDown();
+                id_place = place.get("_id");
             }
         });
 
@@ -127,11 +144,9 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
             @Override
             public void onClick(View v) {
 
-               /* placesTask = new PlacesTask();
-                placesTask.execute(autodiachi.getText()+"".toString());*/
 
                 Getlaln getlaln = new Getlaln();
-               getlaln.execute("123");
+                getlaln.execute(id_place);
 
 
             }
@@ -197,7 +212,7 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
         }
         return data;
     }
-
+/*-----------------------------------------------------------------------------------*/
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(this,
@@ -205,6 +220,16 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
                 Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onDirectionSuccess(Direction direction, String rawBody) {
+
+    }
+
+    @Override
+    public void onDirectionFailure(Throwable t) {
+
+    }
+/*-------------------------------------------------------------------------------------*/
     // Fetches all places from GooglePlaces AutoComplete Web Service
     private class PlacesTask extends AsyncTask<String, Void, String> {
 
@@ -326,6 +351,90 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
 
         map.getUiSettings().setCompassEnabled(true);
 
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Toast.makeText(getApplication(), "Thêm vào danh bạ (sqlite)", Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent(getApplication(), AddDanhBa.class);
+
+                Bundle extras = new Bundle();
+                extras.putSerializable("Address",(Serializable) vitrithem);
+
+                myIntent.putExtras(extras);
+                try{
+                    startActivityForResult(myIntent, 0);}
+                catch (Exception e)
+                {
+                   // Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                Toast.makeText(getApplication(), "Thêm vào danh bạ (sqlite)", Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent(getApplication(), AddDanhBa.class);
+
+                Bundle extras = new Bundle();
+                extras.putSerializable("Address",(Serializable) vitrithem);
+
+                myIntent.putExtras(extras);
+                try{
+                    startActivityForResult(myIntent, 0);}
+                catch (Exception e)
+                {
+                     Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+            }
+        });
+
+        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                //  Toast.makeText(getActivity(), "ád", Toast.LENGTH_SHORT);
+                Location myloction = map.getMyLocation();
+
+                if(myloction == null) return false;
+                LatLng lalng = new LatLng(myloction.getLatitude(), myloction.getLongitude());
+
+                Geocoder geocoder = new Geocoder(getApplication(), Locale.forLanguageTag("vi"));
+                List<Address> address = null;
+                try {
+                    address = geocoder.getFromLocation( myloction.getLatitude(), myloction.getLongitude(), 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplication(), "Kiem tra ket noi mang", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                Address diachi = address.get(0);
+                map.addMarker(new MarkerOptions().position(lalng).title(diachi.getFeatureName()));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng, 15));
+                map.animateCamera(CameraUpdateFactory.zoomIn());
+                map.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
+
+
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < diachi.getMaxAddressLineIndex(); i++) {
+                    sb.append(diachi.getAddressLine(i)).append(", ");
+                }
+
+                String result = sb.toString();
+                vitrithem.setDiaChi(result);
+                // vitrithem.setLalng(latln);
+                vitrithem.setLatitude(diachi.getLatitude());
+                vitrithem.setLongtitude(diachi.getLongitude());
+                vitrithem.setTenViTri(diachi.getFeatureName());
+
+                return false;
+            }
+        });
+
     }
 
 
@@ -342,12 +451,12 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
             String input = "";
 
             try {
-                input = "input=" + URLEncoder.encode(ID_PLACE[0], "utf-8");
+                input = URLEncoder.encode(ID_PLACE[0], "utf-8");
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }
 
-            String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJbWmR-xsvdTERhzE6FwIGMCg&key=AIzaSyCuvb4nDjQONv7nqV9igaOn6cC7l2uRwn8";
+            String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid="+ input +"&key="+ API_KEY;
 
             try {
                 // Fetching the data from we service
@@ -364,36 +473,31 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
 
             HashMap<String, String> place = new HashMap<String, String>();
 
-//            String la="";
-//            String ln="";
-
-
             try {
                 JSONObject jObject = new JSONObject(result);
                String a  = jObject.getString("result");
-                Toast.makeText(getApplication(), "24", Toast.LENGTH_SHORT).show();
                 JSONObject jObject1 = new JSONObject(a);
 
                 JSONObject jObject2 = new JSONObject(jObject1.getString("geometry"));
                 JSONObject jObject3 = new JSONObject(jObject2.getString("location"));
 
                  tmp = new LatLng(jObject3.getDouble("lat"), jObject3.getDouble("lng"));
-                map.addMarker(new MarkerOptions().position(tmp).title("123"));
+
+
+                vitrithem.setLongtitude(tmp.longitude);
+                vitrithem.setLatitude(tmp.latitude);
+                vitrithem.setTenViTri(autodiachi.getText()+"");
+                vitrithem.setDiaChi(autodiachi.getText()+"");
+
+
+                map.addMarker(new MarkerOptions().position(tmp).title(autodiachi.getText()+""));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(tmp, 25));
                 map.animateCamera(CameraUpdateFactory.zoomIn());
                 map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
 
-//
-//                place.put("lat", );
-//                place.put("lng",id);
-             //   String a = jObject.getString("adr_address.geometry.location.la");
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-           // tmp = new LatLng(Long.parseLong(la), Long.parseLong(ln));
-
-            Toast.makeText(getApplication(), "24", Toast.LENGTH_SHORT).show();
         }
     }
 

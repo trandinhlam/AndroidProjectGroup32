@@ -6,24 +6,32 @@
     <EditText
         android:id="@+id/editSearch"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_weight="4"
         android:textSize="8pt"
         android:layout_marginTop="5dp"
-        android:hint="Nhập vào vị trí"
-        android:paddingLeft="5dp"
         android:layout_marginLeft="10dp"
         android:paddingRight="12dp"
+        android:hint="Nhập vào vị trí"
+        android:paddingLeft="5dp"
+        android:maxLines="1"
+        android:scrollbars="vertical"
         android:background="#ffffff"
         android:maxLength="128"
         />
     <Button
         android:id="@+id/btnTimKiem"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="40dp"
-        android:layout_weight="1"
+
         android:textSize="8pt"
         android:layout_marginTop="5dp"
 
-        android:text="Tìm Kiếm"/>
+        android:text="Tìm"/>
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/icon_thoat"
+        />
 </LinearLayout>

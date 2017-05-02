@@ -50,7 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_weight="1"
-                android:lines="1"
+                android:maxLines="1"
+                android:scrollbars = "horizontal"
                 android:textColor="#007697"
                 android:textSize="8pt" />
         </LinearLayout>
@@ -69,7 +70,7 @@
                 android:gravity="right"
                 android:text="Địa Chỉ :"
                 android:textColor="#007697"
-                android:textSize="9pt" />
+                android:textSize="8pt" />
 
             <EditText
                 android:id="@+id/tvdiachi_add"
@@ -77,18 +78,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_weight="2"
-                android:lines="3"
+                android:maxLines="3"
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
-                android:scrollbars="vertical"
+                android:scrollbars="horizontal"
                 android:textColor="#007697"
                 android:textSize="8pt" />
             <Button
                 android:id="@+id/btnTim"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="5dp"
                 android:text="Tìm"/>
         </LinearLayout>
 

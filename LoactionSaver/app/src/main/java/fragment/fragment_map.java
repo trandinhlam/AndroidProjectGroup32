@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -183,6 +185,8 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
                         listAddress = geocoder.getFromLocationName(ViTriSearch, 1);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Toast.makeText(getContext(), "Kiem tra ket noi mang", Toast.LENGTH_SHORT).show();
+                        return ;
                     }
                     if (listAddress.size() == 0) {
                         Toast.makeText(getContext(), "Không có địa điểm vừa tìm!", Toast.LENGTH_SHORT).show();
@@ -241,6 +245,50 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
                 }
             }
         });
+
+    map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+        @Override
+        public boolean onMyLocationButtonClick() {
+          //  Toast.makeText(getActivity(), "ád", Toast.LENGTH_SHORT);
+            Location myloction = map.getMyLocation();
+
+            if(myloction == null) return false;
+            LatLng lalng = new LatLng(myloction.getLatitude(), myloction.getLongitude());
+
+            Geocoder geocoder = new Geocoder(getContext(), Locale.forLanguageTag("vi"));
+            List<Address> address = null;
+            try {
+                address = geocoder.getFromLocation( myloction.getLatitude(), myloction.getLongitude(), 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Kiem tra ket noi mang", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            Address diachi = address.get(0);
+            map.addMarker(new MarkerOptions().position(lalng).title(diachi.getFeatureName()));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng, 15));
+            map.animateCamera(CameraUpdateFactory.zoomIn());
+            map.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
+
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < diachi.getMaxAddressLineIndex(); i++) {
+                sb.append(diachi.getAddressLine(i)).append(", ");
+            }
+
+            String result = sb.toString();
+            vitrithem.setDiaChi(result);
+            // vitrithem.setLalng(latln);
+            vitrithem.setLatitude(diachi.getLatitude());
+            vitrithem.setLongtitude(diachi.getLongitude());
+            vitrithem.setTenViTri(diachi.getFeatureName());
+
+            return false;
+        }
+    });
     }
 
     private void Move() {

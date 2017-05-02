@@ -16,10 +16,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 import Class.*;
 
 import static android.R.attr.bitmap;
 import static android.R.attr.width;
+import static java.security.AccessController.getContext;
 
 /**
  * Created by TheKiet on 4/23/2017.
@@ -90,6 +93,26 @@ public class AddDanhBa extends Activity {
             }
         });
 
+
+        /*Chổ này làm đỡ ở đây lúc bấm nút chỉ đường thì copy đoạn code này vô*/
+        btn_Add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getApplication().getBaseContext(), ChiDuong.class);
+
+                Bundle extras = new Bundle();
+                extras.putDouble("Lat",10.764120);
+                extras.putDouble("Lng" , 106.682472);
+
+                myIntent.putExtras(extras);
+                try{
+                    startActivityForResult(myIntent, 0);}
+                catch (Exception e)
+                {
+                    Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void Anhxa()
