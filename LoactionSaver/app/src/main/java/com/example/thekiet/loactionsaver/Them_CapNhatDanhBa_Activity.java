@@ -87,7 +87,7 @@ public class Them_CapNhatDanhBa_Activity extends Activity{
         }
         else{// khi đã có thông tin thì lưu xuống CSDL
             if(mode==MODE_CREATE){// trường hợp thêm mới
-                this.item=new ItemDanhBa(0,ten,diachi,SDT,Note,0);
+                this.item=new ItemDanhBa(0,ten,diachi,SDT,Note,null);
                 db.addItem(item);
             }
             else {// trường hợp chỉnh sửa

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -49,9 +51,37 @@ public class ThongTinViTri extends Activity {
             txtDiachi.setText("Địa chỉ: "+item.getDiaChi());
             txtDT.setText("ĐT: "+item.getSDT());
             txtnote.setText("Note: \n\t"+item.getNote());
-                //hinh.setImageResource(mybundle.getInt("HinhAnh"));
-            hinh.setImageResource(R.drawable.icon_menu);// hình ảnh tượng trưng
 
+
+            if(item.getHinhAnh()!= null){// nếu có hình thì load hình
+                // tạo bitmap để chuyển thành hình
+                Bitmap bitmap= BitmapFactory.decodeByteArray(item.getHinhAnh(),0,item.getHinhAnh().length);
+                hinh.setImageBitmap(bitmap);
+                //hinh.setImageDrawable(item.getHinhAnh().getDrawable());
+            }
+            else{// nếu không có hình
+                hinh.setImageResource(R.drawable.icon_menu);// hình ảnh tượng trưng
+            }
+
+            btnChiDuong.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                        Intent myIntent = new Intent(getApplication().getBaseContext(), ChiDuong.class);
+
+                        Bundle extras = new Bundle();
+                        extras.putDouble("Lat",item.getLatitude()+100.0);
+                        extras.putDouble("Lng" , item.getLongtitude()+100.0);
+
+                        myIntent.putExtras(extras);
+                        try{
+                            startActivityForResult(myIntent, 0);}
+                        catch (Exception e)
+                        {
+                            Toast.makeText(getApplication(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                }
+            });
         }
         else {
             Toast.makeText(getApplicationContext(), "Lỗi truyền dữ liệu", Toast.LENGTH_SHORT).show();

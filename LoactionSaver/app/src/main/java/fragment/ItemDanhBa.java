@@ -1,6 +1,7 @@
 package fragment;
 
 import android.media.Image;
+import android.widget.ImageView;
 
 import java.io.Serializable;
 
@@ -45,12 +46,12 @@ public class ItemDanhBa implements Serializable{
     private double Longtitude;
     private String SDT;
     private String Note;
-    private int HinhAnh;
+    private byte[] HinhAnh;
 
     public ItemDanhBa() {
     }
 
-    public ItemDanhBa(int id, String ten, String diaChi, String SDT, String note, int hinhAnh) {
+    public ItemDanhBa(int id, String ten, String diaChi, String SDT, String note, byte[] hinhAnh) {
         Id = id;
         Ten = ten;
         DiaChi = diaChi;
@@ -61,7 +62,7 @@ public class ItemDanhBa implements Serializable{
         Longtitude = 0;
     }
 
-    public ItemDanhBa(int id, String ten, String diaChi, double latitude, double longtitude, String SDT, String note, int hinhAnh) {
+    public ItemDanhBa(int id, String ten, String diaChi, double latitude, double longtitude, String SDT, String note,byte[] hinhAnh) {
         Id = id;
         Ten = ten;
         DiaChi = diaChi;
@@ -104,11 +105,11 @@ public class ItemDanhBa implements Serializable{
         Note = note;
     }
 
-    public int getHinhAnh() {
+    public byte[] getHinhAnh() {
         return HinhAnh;
     }
 
-    public void setHinhAnh(int hinhAnh) {
+    public void setHinhAnh(byte[] hinhAnh) {
         HinhAnh = hinhAnh;
     }
 
