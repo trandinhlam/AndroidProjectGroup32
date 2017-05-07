@@ -60,7 +60,7 @@ public class ThongTinViTri extends Activity {
                 //hinh.setImageDrawable(item.getHinhAnh().getDrawable());
             }
             else{// nếu không có hình
-                hinh.setImageResource(R.drawable.icon_menu);// hình ảnh tượng trưng
+                hinh.setImageResource(R.drawable.iconavatar);// hình ảnh tượng trưng
             }
 
             btnChiDuong.setOnClickListener(new View.OnClickListener() {
@@ -70,8 +70,8 @@ public class ThongTinViTri extends Activity {
                         Intent myIntent = new Intent(getApplication().getBaseContext(), ChiDuong.class);
 
                         Bundle extras = new Bundle();
-                        extras.putDouble("Lat",item.getLatitude()+100.0);
-                        extras.putDouble("Lng" , item.getLongtitude()+100.0);
+                        extras.putDouble("Lat",item.getLatitude());
+                        extras.putDouble("Lng" , item.getLongtitude());
 
                         myIntent.putExtras(extras);
                         try{

@@ -55,7 +55,7 @@ public class MyArrayAdapter extends ArrayAdapter<ItemDanhBa>{
                 //hinh.setImageDrawable(item.getHinhAnh().getDrawable());
             }
             else{// nếu không có hình
-                imgItem.setImageResource(R.drawable.icon_menu);// hình ảnh tượng trưng
+                imgItem.setImageResource(R.drawable.iconavatar);// hình ảnh tượng trưng
             }
 
             txtTenItem.setText(itemchon.getTen());
