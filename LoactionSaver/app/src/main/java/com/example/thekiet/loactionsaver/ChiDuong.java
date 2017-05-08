@@ -266,7 +266,7 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
             return;
         }
         Location location = service.getLastKnownLocation(provider);
-       // LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
+        // LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
 
         if(location == null)
         {
@@ -278,9 +278,11 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
         // đưa dữ liệu thử vào
         //LatLng lalng = new LatLng(destination.latitude+0.1, destination.longitude+0.1);
         map.addMarker(new MarkerOptions().position(lalng).title("Vị trí của bạn"));
+
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng,10));
                map.animateCamera(CameraUpdateFactory.zoomIn());
                map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+
 
         GoogleDirection.withServerKey(API_KEY).from(lalng).to(destination)
                 .transportMode(TransportMode.DRIVING).execute(this);
