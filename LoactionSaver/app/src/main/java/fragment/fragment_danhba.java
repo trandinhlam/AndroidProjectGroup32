@@ -25,7 +25,7 @@ import com.example.thekiet.loactionsaver.ThongTinViTri;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import data.MyDatabaseHelper;
+import Data.*;
 
 /**
  * Created by TheKiet on 4/18/2017.
@@ -47,7 +47,7 @@ public class fragment_danhba extends Fragment {
         // tạo dữ liệu cho listdulieu;
 
         MyDatabaseHelper db=new MyDatabaseHelper(this.getContext());
-        db.createDefaultDataIfNeed();
+        //db.createDefaultDataIfNeed();
 
         listdulieu=db.getAllItems();
 
@@ -77,6 +77,7 @@ public class fragment_danhba extends Fragment {
 
         return layout_danhba;
     }
+
     private void showItem(ItemDanhBa duocchon){
         // hien thi chi tiet mot item
         Intent intent=new Intent(getActivity().getBaseContext() ,ThongTinViTri.class);
@@ -86,6 +87,7 @@ public class fragment_danhba extends Fragment {
         intent.putExtras(mybundle);
         getActivity().startActivity(intent);
     }
+
     private void UpDateItem(ItemDanhBa duocchon){
         // hien thi chi tiet mot item
         Intent intent=new Intent(getActivity().getBaseContext() ,Them_CapNhatDanhBa_Activity.class);
@@ -94,6 +96,7 @@ public class fragment_danhba extends Fragment {
         intent.putExtras(mybundle);
         this.startActivityForResult(intent,MY_REQUEST_CODE);
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view,
                                     ContextMenu.ContextMenuInfo menuInfo)    {
@@ -107,6 +110,7 @@ public class fragment_danhba extends Fragment {
         menu.add(0, MENU_ITEM_EDIT , 1, "Sửa");
         menu.add(0, MENU_ITEM_DELETE, 2, "Xóa");
     }
+
     private void deleteItem(ItemDanhBa itemxoa)  {
         MyDatabaseHelper db = new MyDatabaseHelper(this.getContext());
         db.deleteItem(itemxoa);
@@ -115,6 +119,7 @@ public class fragment_danhba extends Fragment {
         this.adapter.notifyDataSetChanged();
         db.close();
     }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo
@@ -152,6 +157,7 @@ public class fragment_danhba extends Fragment {
         }
         return true;
     }
+
     // Khi một Activity hoàn thành thì nó gửi phản hồi lại, ta cần override hàm dưới đây để xử lí phản hồi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

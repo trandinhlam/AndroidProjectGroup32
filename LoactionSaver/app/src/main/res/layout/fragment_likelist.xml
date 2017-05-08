@@ -2,9 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/tvlikelist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="danh sach yeu thich ai lamf phats trien them"/>
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/ListYeuThich"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
