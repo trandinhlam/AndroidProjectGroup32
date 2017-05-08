@@ -62,6 +62,12 @@
         <activity
             android:name=".ChiDuong"></activity>
 
+        <activity
+            android:name=".activiti_GoiY"></activity>
+
+        <activity
+            android:name=".ThongTinChiTietGoiY"></activity>
+
 
 
 =======

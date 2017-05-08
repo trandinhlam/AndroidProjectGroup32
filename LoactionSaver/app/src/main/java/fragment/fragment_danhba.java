@@ -25,7 +25,8 @@ import com.example.thekiet.loactionsaver.ThongTinViTri;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import Data.*;
+
+import Data.MyDatabaseHelper;
 
 /**
  * Created by TheKiet on 4/18/2017.

@@ -5,10 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.example.thekiet.loactionsaver.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +56,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_LONGTITUDE + " REAL, "
                 + COLUMN_PHONE+ " TEXT, "
                 + COLUMN_NOTE + " TEXT, "
-                + COLUMN_IMAGE + " TEXT"+")";
+                + COLUMN_IMAGE + " BLOB"+")";
         // Execute script.
         db.execSQL(script);
 
@@ -75,11 +80,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void createDefaultDataIfNeed(){
         int count=this.getItemsCount();
         if(0==count){// nếu dữ liệu rỗng
-            ItemDanhBa item1=new ItemDanhBa(1, "Kiệt","P. 12, Quận 5, Thành phố Hồ Chí Minh"," 0153245874","Note 1",0);
+            ItemDanhBa item1=new ItemDanhBa(1, "Kiệt","P. 12, Quận 5, Thành phố Hồ Chí Minh","0153245874","Note 1",null);
             this.addItem(item1);
-            ItemDanhBa item2=new ItemDanhBa(2, "Lâm","Địa chỉ 2"," 01683522356","Note 2",0);
+            ItemDanhBa item2=new ItemDanhBa(2, "Lâm","Địa chỉ 2","01683522356","Note 2",null);
             this.addItem(item2);
-            ItemDanhBa item3=new ItemDanhBa(3, "Long","Địa chỉ 3"," 0153245874","Note 3",0);
+            ItemDanhBa item3=new ItemDanhBa(3, "Long","Địa chỉ 3","0153245874","Note 3",null);
             this.addItem(item3);
         }
     }
@@ -145,17 +150,31 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         // mở kết nối database
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
+       /* ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, item1.getTen());
         values.put(COLUMN_ADDRESS,item1.getDiaChi());
         values.put(COLUMN_LATITUDE,item1.getLatitude());
         values.put(COLUMN_LONGTITUDE,item1.getLongtitude());
         values.put(COLUMN_PHONE,item1.getSDT());
-        values.put(COLUMN_NOTE,item1.getNote());
+        values.put(COLUMN_NOTE,item1.getNote());*/
+
 
 
         // chèn một dòng dữ liệu vào bảng.
-        db.insert(TABLE_DanhBa, null, values);
+        String sql="INSERT INTO "+TABLE_DanhBa+" VALUES(null,?,?,?,?,?,?,?)";
+        SQLiteStatement statement=db.compileStatement(sql);
+        statement.clearBindings();
+        statement.bindString(1,item1.getTen());
+        statement.bindString(2,item1.getDiaChi());
+        statement.bindDouble(3,item1.getLatitude());
+        statement.bindDouble(4,item1.getLongtitude());
+        statement.bindString(5,item1.getSDT());
+        statement.bindString(6,item1.getNote());
+        statement.bindBlob(7,item1.getHinhAnh());
+
+
+        statement.executeInsert();
+        //db.insert(TABLE_DanhBa, null, values);
         // Đóng kết nối database.
         db.close();
 
@@ -195,7 +214,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                                                   cursor.getDouble(4),
                                                   cursor.getString(5),
                                                   cursor.getString(6),
-                                                  cursor.getInt(7));
+                                                  cursor.getBlob(7));
+
+
+
+
                 list.add(newitem);
                 Log.i(TAG,"\n..."+newitem.getTen()
                         +"("+newitem.getLatitude()+","+newitem.getLongtitude()+")");
@@ -231,10 +254,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PHONE,item.getSDT());
         values.put(COLUMN_NOTE,item.getNote());
 
+
         // updating row
         int kq= db.update(TABLE_DanhBa, values, COLUMN_ID + " = ?",
                 new String[]{String.valueOf(item.getId())});
         db.close();
         return kq;
+    }
+
+    // hàm bổ trợ tham khảo trên mạng
+
+    private byte[] ImageView_To_Byte(ImageView im){
+        BitmapDrawable drawable=(BitmapDrawable) im.getDrawable();
+        Bitmap bmp=drawable.getBitmap();
+
+        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG,100,stream);
+        byte[] byteArray=stream.toByteArray();
+        return byteArray;
     }
 }

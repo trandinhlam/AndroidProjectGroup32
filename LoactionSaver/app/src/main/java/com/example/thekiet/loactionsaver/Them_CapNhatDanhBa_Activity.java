@@ -2,12 +2,18 @@ package com.example.thekiet.loactionsaver;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+
+import Data.MyDatabaseHelper;
+import fragment.ItemDanhBa;
 
 import fragment.ItemDanhBa;
 import Data.*;
@@ -25,6 +31,7 @@ public class Them_CapNhatDanhBa_Activity extends Activity{
 
     private EditText textTen,textDiaChi,textSDT,textNote;
     private Button btnluu,btnhuy;
+    private ImageView imghinh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,7 @@ public class Them_CapNhatDanhBa_Activity extends Activity{
         textNote=(EditText) findViewById(R.id.editNote);
         btnluu=(Button)findViewById(R.id.btnSave);
         btnhuy=(Button) findViewById(R.id.btnCancel);
+        imghinh=(ImageView) findViewById(R.id.imghinh);
 
         Intent intentExtras=getIntent();
         Bundle mybundle=intentExtras.getExtras();
@@ -48,8 +56,17 @@ public class Them_CapNhatDanhBa_Activity extends Activity{
             textDiaChi.setText(item.getDiaChi());
             textSDT.setText(item.getSDT());
             textNote.setText(item.getNote());
-            //hinh.setImageResource(mybundle.getInt("HinhAnh"));
-            //hinh.setImageResource(R.drawable.icon_menu);// hình ảnh tượng trưng
+
+            if(item.getHinhAnh()!= null){// nếu có hình thì load hình
+                // tạo bitmap để chuyển thành hình
+                Bitmap bitmap= BitmapFactory.decodeByteArray(item.getHinhAnh(),0,item.getHinhAnh().length);
+                imghinh.setImageBitmap(bitmap);
+                //hinh.setImageDrawable(item.getHinhAnh().getDrawable());
+            }
+            else{// nếu không có hình
+                imghinh.setImageResource(R.drawable.iconavatar);// hình ảnh tượng trưng
+            }
+
 
         }
         else {
@@ -87,7 +104,7 @@ public class Them_CapNhatDanhBa_Activity extends Activity{
         }
         else{// khi đã có thông tin thì lưu xuống CSDL
             if(mode==MODE_CREATE){// trường hợp thêm mới
-                this.item=new ItemDanhBa(0,ten,diachi,SDT,Note,0);
+                this.item=new ItemDanhBa(0,ten,diachi,SDT,Note,null);
                 db.addItem(item);
             }
             else {// trường hợp chỉnh sửa
