@@ -22,12 +22,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.thekiet.loactionsaver.AddDanhBa;
 import com.example.thekiet.loactionsaver.R;
+import com.example.thekiet.loactionsaver.activiti_GoiY;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
@@ -69,8 +71,9 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
 
     String ViTriSearch = null;
     String ViTriMap = null;
+    ImageView btntat, btntatidea;
 
-    static ViTriThem  vitrithem = new ViTriThem();
+    static ViTriThem vitrithem = new ViTriThem();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
@@ -92,6 +95,8 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
 
         editidea = (EditText) rootView.findViewById(R.id.editKhoangCach);
         btnIdea = (Button) rootView.findViewById(R.id.btnTimKiemidea);
+        btntat = (ImageView)rootView.findViewById(R.id.btntat);
+        btntatidea = (ImageView)rootView.findViewById(R.id.btntatidea);
 
 
         view_search = (View) rootView.findViewById(R.id.layout_search);
@@ -105,6 +110,21 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
         ani_back_search = AnimationUtils.loadAnimation(getContext(), R.anim.back_search);
         ani_back_idea = AnimationUtils.loadAnimation(getContext(), R.anim.back_idea);
 
+        btntatidea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view_search.setVisibility(View.GONE);
+                view_idea.setVisibility(View.GONE);
+            }
+        });
+
+        btntat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view_search.setVisibility(View.GONE);
+                view_idea.setVisibility(View.GONE);
+            }
+        });
 /*Thao tac menu*/
         fab_menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,8 +136,7 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
                 } else {
                     Back();
                     moveback = false;
-                    view_search.setVisibility(View.GONE);
-                    view_idea.setVisibility(View.GONE);
+
                     editidea.setText("");
                     editSearch.setText("");
                 }
@@ -161,7 +180,6 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
         map.getUiSettings().setMyLocationButtonEnabled(true);
 
 
-
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -186,7 +204,7 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(getContext(), "Kiem tra ket noi mang", Toast.LENGTH_SHORT).show();
-                        return ;
+                        return;
                     }
                     if (listAddress.size() == 0) {
                         Toast.makeText(getContext(), "Không có địa điểm vừa tìm!", Toast.LENGTH_SHORT).show();
@@ -208,14 +226,53 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
 
                         String result = sb.toString();
                         vitrithem.setDiaChi(result);
-                       // vitrithem.setLalng(latln);
+                        // vitrithem.setLalng(latln);
                         vitrithem.setLatitude(address.getLatitude());
                         vitrithem.setLongtitude(address.getLongitude());
                         vitrithem.setTenViTri(address.getFeatureName());
                     }
-                }
-                else{
+                } else {
                     Toast.makeText(getContext(), "Nhập vào địa điểm cần tìm!", Toast.LENGTH_SHORT);
+                }
+            }
+        });
+
+        /*btn idea*/
+        btnIdea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String khoangcach = editidea.getText() + "";
+                if (khoangcach.equals("")) {
+                    Toast.makeText(getActivity(),"Nhập vào khoảng cách trước khi bấm tìm kiếm!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Location myloction = map.getMyLocation();
+
+                if (myloction == null)
+                {
+                    Toast.makeText(getActivity(), "Mở GPS để thực hiện chức năng này", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+
+                ViTriThem tmpViTriThem = new ViTriThem();
+                tmpViTriThem.setTenViTri("");
+                tmpViTriThem.setDiaChi("");
+                tmpViTriThem.setLatitude(myloction.getLatitude());
+                tmpViTriThem.setLongtitude(myloction.getLongitude());
+
+                Intent myIntent = new Intent(getActivity().getBaseContext(), activiti_GoiY.class);
+
+
+                Bundle extras = new Bundle();
+                extras.putSerializable("Address", (Serializable) tmpViTriThem);
+                extras.putString("khoangcach", khoangcach);
+
+                myIntent.putExtras(extras);
+                try {
+                    startActivityForResult(myIntent, 0);
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -234,61 +291,61 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
                 Intent myIntent = new Intent(getActivity().getBaseContext(), AddDanhBa.class);
 
                 Bundle extras = new Bundle();
-                extras.putSerializable("Address",(Serializable) vitrithem);
+                extras.putSerializable("Address", (Serializable) vitrithem);
+                extras.putString("request", "0");
 
-               myIntent.putExtras(extras);
-                try{
-                startActivityForResult(myIntent, 0);}
-                catch (Exception e)
-                {
-                   Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                myIntent.putExtras(extras);
+                try {
+                    startActivityForResult(myIntent, 0);
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-    map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-        @Override
-        public boolean onMyLocationButtonClick() {
-          //  Toast.makeText(getActivity(), "ád", Toast.LENGTH_SHORT);
-            Location myloction = map.getMyLocation();
+        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                //  Toast.makeText(getActivity(), "ád", Toast.LENGTH_SHORT);
+                Location myloction = map.getMyLocation();
 
-            if(myloction == null) return false;
-            LatLng lalng = new LatLng(myloction.getLatitude(), myloction.getLongitude());
+                if (myloction == null) return false;
+                LatLng lalng = new LatLng(myloction.getLatitude(), myloction.getLongitude());
 
-            Geocoder geocoder = new Geocoder(getContext(), Locale.forLanguageTag("vi"));
-            List<Address> address = null;
-            try {
-                address = geocoder.getFromLocation( myloction.getLatitude(), myloction.getLongitude(), 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Kiem tra ket noi mang", Toast.LENGTH_SHORT).show();
+                Geocoder geocoder = new Geocoder(getContext(), Locale.forLanguageTag("vi"));
+                List<Address> address = null;
+                try {
+                    address = geocoder.getFromLocation(myloction.getLatitude(), myloction.getLongitude(), 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Kiem tra ket noi mang", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                Address diachi = address.get(0);
+                map.addMarker(new MarkerOptions().position(lalng).title(diachi.getFeatureName()));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng, 15));
+                map.animateCamera(CameraUpdateFactory.zoomIn());
+                map.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
+
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < diachi.getMaxAddressLineIndex(); i++) {
+                    sb.append(diachi.getAddressLine(i)).append(", ");
+                }
+
+                String result = sb.toString();
+                vitrithem.setDiaChi(result);
+                // vitrithem.setLalng(latln);
+                vitrithem.setLatitude(diachi.getLatitude());
+                vitrithem.setLongtitude(diachi.getLongitude());
+                vitrithem.setTenViTri(diachi.getFeatureName());
+
                 return false;
             }
-
-            Address diachi = address.get(0);
-            map.addMarker(new MarkerOptions().position(lalng).title(diachi.getFeatureName()));
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng, 15));
-            map.animateCamera(CameraUpdateFactory.zoomIn());
-            map.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
-
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < diachi.getMaxAddressLineIndex(); i++) {
-                sb.append(diachi.getAddressLine(i)).append(", ");
-            }
-
-            String result = sb.toString();
-            vitrithem.setDiaChi(result);
-            // vitrithem.setLalng(latln);
-            vitrithem.setLatitude(diachi.getLatitude());
-            vitrithem.setLongtitude(diachi.getLongitude());
-            vitrithem.setTenViTri(diachi.getFeatureName());
-
-            return false;
-        }
-    });
+        });
     }
 
     private void Move() {
