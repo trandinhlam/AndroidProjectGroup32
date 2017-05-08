@@ -11,15 +11,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
 
 import Data.MyDatabaseHelper;
 import fragment.ItemDanhBa;
-=======
-import Data.MyDatabaseHelper;
-import fragment.ItemDanhBa;
-
->>>>>>> 48b4697a070e3a73515ec3a8a848c7690b332165
 
 import fragment.ItemDanhBa;
 import Data.*;

@@ -122,7 +122,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                         cursor.getDouble(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getInt(7));
+                        cursor.getBlob(7));
                 list.add(newitem);
                 Log.i(TAG,"\n..."+newitem.getTen()
                         +"("+newitem.getLatitude()+","+newitem.getLongtitude()+")");
