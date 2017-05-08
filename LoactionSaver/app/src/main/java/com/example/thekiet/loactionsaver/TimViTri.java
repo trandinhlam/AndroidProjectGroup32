@@ -379,6 +379,7 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
 
                 Bundle extras = new Bundle();
                 extras.putSerializable("Address",(Serializable) vitrithem);
+                extras.putString("request", "0");
 
                 myIntent.putExtras(extras);
                 try{
