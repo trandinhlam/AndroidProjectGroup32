@@ -1,4 +1,4 @@
-package data;
+package Data;
 
 import android.content.ContentValues;
 import android.content.Context;

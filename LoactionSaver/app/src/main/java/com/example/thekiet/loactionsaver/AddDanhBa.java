@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,9 +20,12 @@ import android.widget.Toast;
 import java.io.Serializable;
 
 import Class.*;
+import Data.Parser_Image;
 
 import static android.R.attr.bitmap;
 import static android.R.attr.width;
+import static com.example.thekiet.loactionsaver.R.id.image1;
+import static com.example.thekiet.loactionsaver.R.id.image2;
 import static java.security.AccessController.getContext;
 
 /**
@@ -37,17 +41,41 @@ public class AddDanhBa extends Activity {
     EditText edit_Ten, edit_DiaChi, edit_Note;
     ImageView btn_Add, anhTai1, anhTai2, anhChup1, anhChup2;
     int Checkanh1 = 0, Checkanh2 = 0;
+    Bundle extras = new Bundle();
     Button btnTim;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_themdanhba);
 //        Intent myIntent = getIntent();
-
-        Bundle extras = new Bundle();
-        extras = getIntent().getExtras();
-        vitrithem = (ViTriThem) extras.getSerializable("Address");
         Anhxa();
+
+        extras = getIntent().getExtras();
+        int requestcode = Integer.parseInt(extras.getString("request"));
+
+        if(requestcode == 2)
+        {
+            btnTim.setVisibility(View.INVISIBLE);
+            String Hinh1 = extras.getString("Hinh1");
+            String Hinh2 = extras.getString("Hinh2");
+            if(Hinh1.length() !=0 )
+            {
+                anhTai1.setImageBitmap(Parser_Image.Byte_to_Image(Base64.decode(Hinh1,Base64.DEFAULT)));
+
+            }
+
+
+            if(Hinh2.length() !=0 )
+            {
+                anhTai2.setImageBitmap(Parser_Image.Byte_to_Image(Base64.decode(Hinh2, Base64.DEFAULT)));
+
+            }
+
+        }
+
+
+        vitrithem = (ViTriThem) extras.getSerializable("Address");
+
         edit_Ten.setText(vitrithem.getTenViTri());
         edit_DiaChi.setText(vitrithem.getDiaChi());
 
@@ -134,6 +162,7 @@ public class AddDanhBa extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Toast.makeText(getApplication(),String.valueOf(requestCode), Toast.LENGTH_LONG).show();
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
@@ -177,6 +206,8 @@ public class AddDanhBa extends Activity {
         Bitmap bitmap = drawable.getBitmap();
         Integer a = bitmap.getByteCount();
         Toast.makeText(this, a.toString() , Toast.LENGTH_SHORT).show();
+
+
 
     }
 }

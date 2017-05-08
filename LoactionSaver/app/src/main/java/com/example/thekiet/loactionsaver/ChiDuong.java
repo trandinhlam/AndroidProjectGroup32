@@ -145,7 +145,7 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
         if (direction.isOK()) {
 
             a = direction.getRouteList().get(0).getLegList().get(0).getDistance().getText();
-            Toast.makeText(getApplication(), a + " Km", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), a, Toast.LENGTH_SHORT).show();
             ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
             polyline = map.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.BLUE));
             polyline.setClickable(true);
@@ -277,7 +277,7 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
         map.addMarker(new MarkerOptions().position(lalng).title("Your Location"));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng,10));
                map.animateCamera(CameraUpdateFactory.zoomIn());
-               map.animateCamera(CameraUpdateFactory.zoomTo(25), 2000, null);
+               map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
 
         GoogleDirection.withServerKey(API_KEY).from(lalng).to(destination)
                 .transportMode(TransportMode.DRIVING).execute(this);
