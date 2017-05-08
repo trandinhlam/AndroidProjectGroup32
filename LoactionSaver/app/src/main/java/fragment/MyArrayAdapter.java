@@ -3,7 +3,9 @@ package fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,7 @@ public class MyArrayAdapter extends ArrayAdapter<ItemDanhBa>{
 
     }
 
-    @NonNull
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater=context.getLayoutInflater();
@@ -46,7 +48,16 @@ public class MyArrayAdapter extends ArrayAdapter<ItemDanhBa>{
 
             ItemDanhBa itemchon=arrayItems.get(position);
 
-            imgItem.setImageResource(R.drawable.icon_menu);
+            if(itemchon.getHinhAnh()!= null){// nếu có hình thì load hình
+                // tạo bitmap để chuyển thành hình
+                Bitmap bitmap= BitmapFactory.decodeByteArray(itemchon.getHinhAnh(),0,itemchon.getHinhAnh().length);
+                imgItem.setImageBitmap(bitmap);
+                //hinh.setImageDrawable(item.getHinhAnh().getDrawable());
+            }
+            else{// nếu không có hình
+                imgItem.setImageResource(R.drawable.iconavatar);// hình ảnh tượng trưng
+            }
+
             txtTenItem.setText(itemchon.getTen());
 
         }

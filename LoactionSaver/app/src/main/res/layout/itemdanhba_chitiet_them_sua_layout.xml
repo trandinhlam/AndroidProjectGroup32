@@ -7,10 +7,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nhập/Cập nhật thông tin"
+        android:text="Cập nhật thông tin"
         android:paddingLeft="@dimen/fab_margin"
         android:paddingTop="@dimen/fab_margin"
-        android:textColor="#DA4336"
+        android:textColor="@color/colorred"
         android:textSize="@dimen/titleTextSize"
         />
 
@@ -18,100 +18,108 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
-    <TextView
-        android:id="@+id/TenDiaDiem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tên:"
-        android:paddingLeft="@dimen/fab_margin"
-        android:paddingTop="@dimen/fab_margin"
-        android:textSize="@dimen/Itemtextsize"
-        android:textColor="@color/textcolor1"
-        />
-    <EditText
-        android:id="@+id/editTen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:lines="1"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Địa chỉ"
-        android:textColor="@color/textcolor1"
-        android:paddingLeft="@dimen/fab_margin"
-        android:paddingTop="@dimen/fab_margin"
-        android:textSize="@dimen/Itemtextsize2"/>
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="@dimen/edittextwidth"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/editDiaChi"
-            android:layout_width="@dimen/edittextwidth"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            />
-        <Button
-            android:id="@+id/btnTimDiaChi"
+        <TextView
+            android:id="@+id/TenDiaDiem"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="Tìm"
-
+            android:layout_height="wrap_content"
+            android:text="Tên:"
+            android:paddingLeft="@dimen/fab_margin"
+            android:paddingTop="@dimen/fab_margin"
+            android:textSize="@dimen/Itemtextsize"
+            android:textColor="@color/colorred"
             />
+        <EditText
+            android:id="@+id/editTen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:lines="1"/>
     </LinearLayout>
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ĐT:"
-        android:textColor="@color/textcolor1"
-        android:paddingLeft="@dimen/fab_margin"
-        android:paddingTop="@dimen/fab_margin"
-        android:paddingBottom="@dimen/fab_margin"
-        android:textSize="@dimen/Itemtextsize2"/>
-    <EditText
-        android:id="@+id/editSDT"
+    <LinearLayout
+        android:layout_marginTop= "@dimen/fab_margin"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:lines="1"
-        android:inputType="phone" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ: "
+            android:textColor="@color/colorred"
+            android:paddingLeft="@dimen/fab_margin"
+            android:paddingTop="@dimen/fab_margin"
+            android:textSize="@dimen/Itemtextsize"/>
+            <EditText
+                android:id="@+id/editDiaChi"
+                android:layout_width="@dimen/edittextwidth"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:layout_weight="1"
 
+                />
+            <Button
+                android:id="@+id/btnTimDiaChi"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="Tìm"
+                android:enabled="false"
+
+                />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ĐT:"
+            android:textColor="@color/colorred"
+            android:paddingLeft="@dimen/fab_margin"
+            android:paddingTop="@dimen/fab_margin"
+            android:paddingBottom="@dimen/fab_margin"
+            android:textSize="@dimen/Itemtextsize"/>
+        <EditText
+            android:id="@+id/editSDT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:inputType="phone" />
+    </LinearLayout>
 
     <TextView
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Note:"
-        android:textColor="@color/textcolor1"
+        android:textColor="@color/colorred"
         android:paddingLeft="@dimen/fab_margin"
         android:paddingTop="@dimen/fab_margin"
-        android:textSize="@dimen/Itemtextsize2"/>
+        android:textSize="@dimen/Itemtextsize"/>
     <EditText
         android:id="@+id/editNote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lines="5"/>
+        android:lines="2"/>
 
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/fab_margin"
+
+    <ImageView
+            android:id="@+id/imghinh"
+            android:layout_width="@dimen/imagesize"
+            android:layout_height="@dimen/imagesize"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="5dp"
+
             />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/fab_margin"
-            />
-    </LinearLayout>
+
    <GridLayout
+       android:stateListAnimator="@null"
        android:layout_gravity="center_horizontal"
        android:layout_width="match_parent"
        android:layout_height="wrap_content">

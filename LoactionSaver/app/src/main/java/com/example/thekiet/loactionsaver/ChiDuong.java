@@ -145,7 +145,7 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
         if (direction.isOK()) {
 
             a = direction.getRouteList().get(0).getLegList().get(0).getDistance().getText();
-            Toast.makeText(getApplication(), a, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(),"Khoảng cách "+ a, Toast.LENGTH_SHORT).show();
             ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
             polyline = map.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.BLUE));
             polyline.setClickable(true);
@@ -270,11 +270,14 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
 
         if(location == null)
         {
-            Toast.makeText(getApplication(), "Khong tim thay dia diem cua ban!", Toast.LENGTH_SHORT);
+            Toast.makeText(getApplication(), "Không tìm thấy địa chỉ!", Toast.LENGTH_SHORT);
             return ;
         }
+        // vị trí thật sự của máy
         LatLng lalng = new LatLng(location.getLatitude(), location.getLongitude());
-        map.addMarker(new MarkerOptions().position(lalng).title("Your Location"));
+        // đưa dữ liệu thử vào
+        //LatLng lalng = new LatLng(destination.latitude+0.1, destination.longitude+0.1);
+        map.addMarker(new MarkerOptions().position(lalng).title("Vị trí của bạn"));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng,10));
                map.animateCamera(CameraUpdateFactory.zoomIn());
                map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
