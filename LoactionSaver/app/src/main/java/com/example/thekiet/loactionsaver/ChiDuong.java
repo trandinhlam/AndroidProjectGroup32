@@ -282,6 +282,10 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng,10));
                map.animateCamera(CameraUpdateFactory.zoomIn());
                map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 48b4697a070e3a73515ec3a8a848c7690b332165
 
         GoogleDirection.withServerKey(API_KEY).from(lalng).to(destination)
                 .transportMode(TransportMode.DRIVING).execute(this);

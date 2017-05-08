@@ -25,8 +25,13 @@ import com.example.thekiet.loactionsaver.ThongTinViTri;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+<<<<<<< HEAD
 
 import Data.MyDatabaseHelper;
+=======
+import Data.MyDatabaseHelper;
+
+>>>>>>> 48b4697a070e3a73515ec3a8a848c7690b332165
 
 /**
  * Created by TheKiet on 4/18/2017.
