@@ -36,6 +36,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_NOTE ="Note" ;
     private static final String COLUMN_IMAGE ="HinhAnh" ;
 
+    private static final String TABLE_YEUTHICH = "yeuthich";
+    private static final String COLUMN_IDL ="ID";
+
+
     private static final String TAG = "SQLite";
     public MyDatabaseHelper(Context context)  {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -43,6 +47,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Script to create table.
+        //tạo bảng danh bạ
         String script = "CREATE TABLE " + TABLE_DanhBa + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY, "
                 + COLUMN_NAME+ " TEXT, "
@@ -54,15 +59,24 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_IMAGE + " BLOB"+")";
         // Execute script.
         db.execSQL(script);
+
+        //tạo bảng yêu thích
+        String script1 = "CREATE TABLE yeuthich " +
+                "("
+                + "ID INTEGER NOT NULL CONSTRAINT ID REFERENCES danhba(ID) ON DELETE CASCADE" +
+                ")";
+        db.execSQL(script1);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop table
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_YEUTHICH);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DanhBa);
         // Recreate
         onCreate(db);
     }
+
     public void createDefaultDataIfNeed(){
         int count=this.getItemsCount();
         if(0==count){// nếu dữ liệu rỗng
@@ -74,7 +88,63 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             this.addItem(item3);
         }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // phần like list
+    public void addLikeListItem(Integer IDDB)
+    {
+        // mở kết nối database
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IDL, IDDB);
+
+        // chèn một dòng dữ liệu vào bảng.
+        db.insert(TABLE_YEUTHICH, null, values);
+        // Đóng kết nối database.
+        db.close();
+    }
+
+    public ArrayList<ItemDanhBa> getAllLikeListItems() {
+        List<ItemDanhBa> list=new ArrayList<ItemDanhBa>();
+        // Select All query
+
+        String query="SELECT * FROM danhba WHERE ID IN (SELECT ID FROM yeuthich)";
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor cursor=db.rawQuery(query,null);
+
+        // Duyệt trên cursor và thêm vào danh sách
+        if(cursor.moveToFirst()){
+            do{
+                ItemDanhBa newitem=new ItemDanhBa(cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getDouble(3),
+                        cursor.getDouble(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getBlob(7));
+                list.add(newitem);
+                Log.i(TAG,"\n..."+newitem.getTen()
+                        +"("+newitem.getLatitude()+","+newitem.getLongtitude()+")");
+
+
+            }
+            while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return (ArrayList<ItemDanhBa>) list;
+    }
+
+    public void deleteLikeListItem(Integer IDDB) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_YEUTHICH, COLUMN_ID + " = ?", new String[]{""+IDDB});
+        db.close();
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+    // phần danh bạ
     public void addItem(ItemDanhBa item1) {
         Log.i(TAG, "MyDatabaseHelper.addItem ... " + item1.getTen());
         // mở kết nối database
@@ -109,7 +179,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
     }
-
 
     public int getItemsCount() {
         Log.i(TAG, "MyDatabaseHelper.getItemsCount ... " );

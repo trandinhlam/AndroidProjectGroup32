@@ -68,14 +68,14 @@ public class AddDanhBa extends Activity {
             String Hinh2 = extras.getString("Hinh2");
             if(Hinh1.length() !=0 )
             {
-                anhTai1.setImageBitmap(Parser_Image.Byte_to_Image(Base64.decode(Hinh1,Base64.DEFAULT)));
+                anhChup1.setImageBitmap(Parser_Image.Byte_to_Image(Base64.decode(Hinh1,Base64.DEFAULT)));
 
             }
 
 
             if(Hinh2.length() !=0 )
             {
-                anhTai2.setImageBitmap(Parser_Image.Byte_to_Image(Base64.decode(Hinh2, Base64.DEFAULT)));
+                anhChup2.setImageBitmap(Parser_Image.Byte_to_Image(Base64.decode(Hinh2, Base64.DEFAULT)));
 
             }
 

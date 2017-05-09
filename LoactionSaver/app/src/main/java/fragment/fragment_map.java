@@ -180,6 +180,8 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
         map.getUiSettings().setMyLocationButtonEnabled(true);
 
 
+
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -346,6 +348,15 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
                 return false;
             }
         });
+
+
+
+            LatLng lalng = new LatLng(10.765977, 106.679409);
+
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng, 10));
+            map.animateCamera(CameraUpdateFactory.zoomIn());
+            map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+
     }
 
     private void Move() {
