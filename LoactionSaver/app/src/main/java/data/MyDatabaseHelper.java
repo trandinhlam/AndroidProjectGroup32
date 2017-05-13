@@ -61,7 +61,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(script);
 
         //tạo bảng yêu thích
-        String script1 = "CREATE TABLE yeuthich " +
+        String script1 = "CREATE TABLE yeuthich" +
                 "("
                 + "ID INTEGER NOT NULL CONSTRAINT ID REFERENCES danhba(ID) ON DELETE CASCADE" +
                 ")";
