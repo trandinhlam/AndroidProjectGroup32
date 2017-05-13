@@ -77,6 +77,7 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+
         SupportMapFragment mapFragment = ((SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map));
         mapFragment.getMapAsync(this);
@@ -310,8 +311,13 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
             public boolean onMyLocationButtonClick() {
                 //  Toast.makeText(getActivity(), "ád", Toast.LENGTH_SHORT);
                 Location myloction = map.getMyLocation();
+                map.clear();
 
-                if (myloction == null) return false;
+                if (myloction == null) {
+                    Toast.makeText(getActivity(), "Bật GPS để thực hiện chức năng này", Toast.LENGTH_SHORT).show();
+                    return false;
+
+                }
                 LatLng lalng = new LatLng(myloction.getLatitude(), myloction.getLongitude());
 
                 Geocoder geocoder = new Geocoder(getContext(), Locale.forLanguageTag("vi"));

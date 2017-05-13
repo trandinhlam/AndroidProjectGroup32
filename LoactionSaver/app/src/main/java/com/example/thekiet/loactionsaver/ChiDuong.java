@@ -1,7 +1,11 @@
 package com.example.thekiet.loactionsaver;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,7 +15,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -27,6 +33,11 @@ import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -61,11 +72,13 @@ import static java.security.AccessController.getContext;
  * Created by TheKiet on 4/25/2017.
  */
 
-public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineClickListener, OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, DirectionCallback {
+public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineClickListener, LocationListener, OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, DirectionCallback, GoogleApiClient.ConnectionCallbacks {
 
     private GoogleMap map;
     Polyline polyline;
     LatLng tmp;
+    LatLng From;
+    Boolean checkmovecamera = true;
     private static final String LOG_TAG = "GGPlaces Autocomplete";
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
@@ -77,7 +90,12 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
     static ViTriThem vitrithem = new ViTriThem();
 
     private GoogleApiClient mGoogleApiClient;
-    ;
+    LocationRequest mLocationRequest;
+
+    private static final long INTERVAL = 1000 * 10;
+    private static final long FASTEST_INTERVAL = 1000 * 5;
+
+    private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
     String a;
 
     @Override
@@ -91,6 +109,11 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
         mapFragment.getMapAsync(this);
 
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
     }
 
@@ -145,7 +168,7 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
         if (direction.isOK()) {
 
             a = direction.getRouteList().get(0).getLegList().get(0).getDistance().getText();
-            Toast.makeText(getApplication(),"Khoảng cách "+ a, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), "Khoảng cách " + a, Toast.LENGTH_SHORT).show();
             ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
             polyline = map.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.BLUE));
             polyline.setClickable(true);
@@ -183,8 +206,13 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
                     == PackageManager.PERMISSION_GRANTED) {
                 map.setMyLocationEnabled(true);
             }
-        } else
+        } else {
             map.setMyLocationEnabled(true);
+
+
+        }
+
+       // mGoogleApiClient.connect();
 
         map.getUiSettings().setCompassEnabled(true);
 
@@ -194,7 +222,8 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
         Double lng = extras.getDouble("Lng");
         tmp = new LatLng(lat, lng);
 
-        getDirection(tmp);
+        //getDirection(tmp);
+
 
 //        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 //            @Override
@@ -256,35 +285,39 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
 
     }
 
-    private void getDirection(LatLng destination) {
+    private void getDirection(LatLng destination, LatLng from) {
 
-        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = service.getBestProvider(criteria, false);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        map.clear();
+//        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        Criteria criteria = new Criteria();
+//        String provider = service.getBestProvider(criteria, false);
+//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//
+//            return;
+//        }
+//        Location location = service.getLastKnownLocation(provider);
+//        // LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
 
-            return;
-        }
-        Location location = service.getLastKnownLocation(provider);
-        // LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
-
-        if(location == null)
-        {
-            Toast.makeText(getApplication(), "Không tìm thấy địa chỉ!", Toast.LENGTH_SHORT);
-            return ;
-        }
-        // vị trí thật sự của máy
-        LatLng lalng = new LatLng(location.getLatitude(), location.getLongitude());
+//        Location location = map.getMyLocation();
+//        if(location == null)
+//        {
+//            Toast.makeText(getApplication(), "Không tìm thấy địa chỉ!", Toast.LENGTH_SHORT).show();
+//         //   finish();
+//            return ;
+//        }
+//        // vị trí thật sự của máy
+//        LatLng lalng = new LatLng(location.getLatitude(), location.getLongitude());
         // đưa dữ liệu thử vào
         //LatLng lalng = new LatLng(destination.latitude+0.1, destination.longitude+0.1);
-        map.addMarker(new MarkerOptions().position(lalng).title("Vị trí của bạn"));
+        map.addMarker(new MarkerOptions().position(from).title("Vị trí của bạn"));
+        if(checkmovecamera == true) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(from, 15));
+            map.animateCamera(CameraUpdateFactory.zoomIn());
+            map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+            checkmovecamera = false;
+        }
 
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(lalng,10));
-               map.animateCamera(CameraUpdateFactory.zoomIn());
-               map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
-
-
-        GoogleDirection.withServerKey(API_KEY).from(lalng).to(destination)
+        GoogleDirection.withServerKey(API_KEY).from(from).to(destination)
                 .transportMode(TransportMode.DRIVING).execute(this);
     }
 
@@ -292,4 +325,105 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
     public void onPolylineClick(Polyline polyline) {
         Toast.makeText(getApplication(), a, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        checkLocationPermission();
+        if (location == null) {
+            Toast.makeText(getApplication(), "Không tìm thấy địa chỉ, Vui lòng chờ giây lát nếu đã mở GPS", Toast.LENGTH_LONG).show();
+        } else {
+            From = new LatLng(location.getLatitude(), location.getLongitude());
+            getDirection(tmp, From);
+        }
+       // removeLocationUpdates();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        if(mGoogleApiClient != null)
+        checkmovecamera = true;
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        removeLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mGoogleApiClient.connect();
+    }
+
+
+    private void removeLocationUpdates() {
+        if (this.mGoogleApiClient != null) {
+            if (this.mGoogleApiClient.isConnected())
+                LocationServices.FusedLocationApi.removeLocationUpdates(this.mGoogleApiClient, this);
+            this.mGoogleApiClient.disconnect();
+        }
+    }
+
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(this).setTitle("Bật GPS").setMessage("Hãy bật GPS để sử dụng chức năng này!")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 104);
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 104);
+            }
+        }
+    }
+
+    private void requestLocation() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(500);
+        mLocationRequest.setFastestInterval(500);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
 }
