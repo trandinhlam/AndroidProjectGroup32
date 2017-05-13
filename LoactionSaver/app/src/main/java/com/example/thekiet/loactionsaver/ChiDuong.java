@@ -267,6 +267,7 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
 //        });
 
 
+
         map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
@@ -309,7 +310,11 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
 //        LatLng lalng = new LatLng(location.getLatitude(), location.getLongitude());
         // đưa dữ liệu thử vào
         //LatLng lalng = new LatLng(destination.latitude+0.1, destination.longitude+0.1);
+        map.addMarker(new MarkerOptions().position(destination).title("Vị trí cần đến"));
+
         map.addMarker(new MarkerOptions().position(from).title("Vị trí của bạn"));
+
+
         if(checkmovecamera == true) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(from, 15));
             map.animateCamera(CameraUpdateFactory.zoomIn());
@@ -349,7 +354,7 @@ public class ChiDuong extends FragmentActivity implements GoogleMap.OnPolylineCl
 
         checkLocationPermission();
         if (location == null) {
-            Toast.makeText(getApplication(), "Không tìm thấy địa chỉ, Vui lòng chờ giây lát nếu đã mở GPS", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplication(), "Không tìm thấy địa chỉ, Vui lòng mở GPS", Toast.LENGTH_LONG).show();
         } else {
             From = new LatLng(location.getLatitude(), location.getLongitude());
             getDirection(tmp, From);

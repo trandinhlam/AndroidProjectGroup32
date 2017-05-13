@@ -306,6 +306,44 @@ public class fragment_map extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                map.clear();
+                Geocoder geocoder = new Geocoder(getContext(), Locale.forLanguageTag("vi"));
+                List<Address> address = null;
+                try {
+                    address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Kiem tra ket noi mang", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+
+                Address diachi = address.get(0);
+
+                map.addMarker(new MarkerOptions().position(latLng).title(diachi.getFeatureName()));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                map.animateCamera(CameraUpdateFactory.zoomIn());
+                map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < diachi.getMaxAddressLineIndex(); i++) {
+                    sb.append(diachi.getAddressLine(i)).append(", ");
+                }
+
+                String result = sb.toString();
+                vitrithem.setDiaChi(result);
+                // vitrithem.setLalng(latln);
+                vitrithem.setLatitude(diachi.getLatitude());
+                vitrithem.setLongtitude(diachi.getLongitude());
+                vitrithem.setTenViTri(diachi.getFeatureName());
+            }
+        });
+
         map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
