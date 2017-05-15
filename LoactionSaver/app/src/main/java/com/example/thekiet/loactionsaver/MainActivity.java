@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import fragment.ItemDanhBa;
 import fragment.fragment_danhba;
 import fragment.fragment_likelist;
 import fragment.fragment_map;
@@ -93,6 +94,27 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void refeshLikeList()
+    {
+        fragment_likelist frag_likelist = (fragment_likelist) mSectionsPagerAdapter.getItem(2);
+
+        frag_likelist.RefreshLikeList();
+    }
+
+    public void refreshDanhBa()
+    {
+        fragment_danhba frag_danhba = (fragment_danhba) mSectionsPagerAdapter.getItem(1);
+
+        frag_danhba.RefreshDanhBa();
+    }
+
+    public void XoaYeuThich(ItemDanhBa duocchon)
+    {
+        fragment_likelist frag_likelist = (fragment_likelist) mSectionsPagerAdapter.getItem(2);
+
+        frag_likelist.deleteItem(duocchon);
+    }
+
     /*
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -129,5 +151,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
+
     }
 }

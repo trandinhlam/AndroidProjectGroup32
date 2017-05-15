@@ -28,6 +28,7 @@ public class Them_CapNhatDanhBa_Activity extends Activity{
     private int mode;
     private boolean needRefresh=false;
 
+    private MainActivity mainactivity;
 
     private EditText textTen,textDiaChi,textSDT,textNote;
     private Button btnluu,btnhuy;

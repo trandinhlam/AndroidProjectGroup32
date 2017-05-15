@@ -139,7 +139,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void deleteLikeListItem(Integer IDDB) {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_YEUTHICH, COLUMN_ID + " = ?", new String[]{""+IDDB});
+        db.delete(TABLE_YEUTHICH, COLUMN_IDL + " = ?", new String[]{""+IDDB});
         db.close();
     }
 

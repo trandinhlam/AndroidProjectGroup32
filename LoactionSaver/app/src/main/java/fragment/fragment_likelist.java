@@ -2,6 +2,7 @@ package fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.thekiet.loactionsaver.MainActivity;
 import com.example.thekiet.loactionsaver.R;
 import com.example.thekiet.loactionsaver.Them_CapNhatDanhBa_Activity;
 import com.example.thekiet.loactionsaver.ThongTinViTri;
@@ -33,11 +36,13 @@ import Data.MyDatabaseHelper;
  */
 
 public class fragment_likelist extends Fragment {
-    private static final int MENU_ITEM_VIEW =111 ;
-    private static final int MENU_ITEM_CREATE =222 ;
-    private static final int MENU_ITEM_EDIT =333 ;
-    private static final int MENU_ITEM_DELETE =444 ;
-    private static final int MY_REQUEST_CODE =10 ;
+    private static final int MENU_ITEM_VIEW =1111 ;
+    private static final int MENU_ITEM_EDIT =2222 ;
+    private static final int MENU_ITEM_DELETE =3333 ;
+    private static final int MY_REQUEST_CODE =100 ;
+
+    MainActivity mainactivity;
+
     TextView tbao;
     ListView lvdanhbayeuthich;
     ArrayList<ItemDanhBa> listdulieu=new ArrayList<ItemDanhBa>();
@@ -98,7 +103,7 @@ public class fragment_likelist extends Fragment {
         this.startActivityForResult(intent,MY_REQUEST_CODE);
     }
 
-    private void deleteItem(ItemDanhBa itemxoa)  {
+    public void deleteItem(ItemDanhBa itemxoa)  {
         MyDatabaseHelper db = new MyDatabaseHelper(this.getContext());
         db.deleteLikeListItem(itemxoa.getId());
         this.listdulieu.remove(itemxoa);
@@ -116,9 +121,18 @@ public class fragment_likelist extends Fragment {
 
         // groupId, itemId, order, title
         menu.add(0, MENU_ITEM_VIEW , 0, "Chi tiết");
-        //menu.add(0, MENU_ITEM_CREATE , 1, "Create Note");
         menu.add(0, MENU_ITEM_EDIT , 1, "Sửa");
-        menu.add(0, MENU_ITEM_DELETE, 2, "Xóa");
+        menu.add(0, MENU_ITEM_DELETE, 2, "Xóa khỏi yêu thích");
+    }
+
+    //  Phương thức này được gọi sau khi Fragment được ghép vào Activity.
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof MainActivity) {
+            this.mainactivity = (MainActivity) context;
+        }
     }
 
     @Override
@@ -142,21 +156,38 @@ public class fragment_likelist extends Fragment {
             {
                 // Hỏi trước khi xóa.
                 new AlertDialog.Builder(this.getContext())
-                        .setMessage("Bạn chắc chắn muốn xóa "+duocchon.getTen() +" khỏi danh bạ?")
+                        .setMessage("Bạn chắc chắn muốn xóa "+duocchon.getTen() +" khỏi danh sách yêu thích?")
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 deleteItem(duocchon);
+                                RefreshLikeList();
                             }
                         })
                         .setNegativeButton("No", null)
                         .show();
+
+                Toast.makeText(this.getContext(),
+                        "Đã xóa khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show();
             }
             break;
             default:
                 return false;
         }
         return true;
+    }
+
+    public void RefreshLikeList()
+    {
+
+            this.listdulieu.clear();
+            MyDatabaseHelper db = new MyDatabaseHelper(this.getContext());
+            this.listdulieu = db.getAllLikeListItems();
+            db.close();
+            adapter = (MyArrayAdapter) new MyArrayAdapter(this.getActivity(),
+                    R.layout.itemdanhba_layout, listdulieu);
+            lvdanhbayeuthich.setAdapter(adapter);
+
     }
 
     // Khi một Activity hoàn thành thì nó gửi phản hồi lại, ta cần override hàm dưới đây để xử lí phản hồi
@@ -174,6 +205,10 @@ public class fragment_likelist extends Fragment {
                         R.layout.itemdanhba_layout,listdulieu);
                 lvdanhbayeuthich.setAdapter(adapter);
                 // Thông báo dữ liệu thay đổi (Để refresh ListView).
+
+                mainactivity.refreshDanhBa();
+
+                Log.i("ThongBao","RefreshListview....size="+ listdulieu.size());
             }
         }
     }
