@@ -26,7 +26,7 @@ public class ThongTinViTri extends Activity {
     TextView txtTen,txtDiachi,txtDT, txtnote;
     ImageView hinh;
     Activity currentAct;
-    Button btnChiDuong;
+    ImageView btnChiDuong;
     ImageView imageGoiDien,imageNhanTin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class ThongTinViTri extends Activity {
         txtnote =(TextView) findViewById(R.id.Note);
 
         hinh= (ImageView) findViewById(R.id.hinhanhchitiet);
-        btnChiDuong=(Button) findViewById(R.id.btnChiDuong);
+        btnChiDuong=(ImageView) findViewById(R.id.btnChiDuong);
         imageGoiDien=(ImageView) findViewById(R.id.ImageGoiDienThoai);
         imageGoiDien.setImageResource(R.drawable.icon_call);
         imageNhanTin=(ImageView) findViewById(R.id.ImageGuiTinNhan);
@@ -55,9 +55,9 @@ public class ThongTinViTri extends Activity {
             item= (ItemDanhBa) mybundle.getSerializable("item");
 
             txtTen.setText(item.getTen());
-            txtDiachi.setText("Địa chỉ: "+item.getDiaChi());
-            txtDT.setText("ĐT: "+item.getSDT());
-            txtnote.setText("Note: \n\t"+item.getNote());
+            txtDiachi.setText(item.getDiaChi());
+            txtDT.setText(item.getSDT());
+            txtnote.setText(item.getNote());
 
 
             if(item.getHinhAnh()!= null){

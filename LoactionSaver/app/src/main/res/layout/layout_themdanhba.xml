@@ -17,14 +17,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Thông tin danh bạ"
-                android:textColor="#009785"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
+                android:textColor="#DA4336"
+                android:textStyle="bold"
                 android:textSize="11pt" />
             <ImageView
                 android:id="@+id/btnadd"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
                 android:layout_weight="2"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/icon_luu"/>
         </LinearLayout>
 
@@ -49,9 +53,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:scrollbars = "horizontal"
-                android:textColor="#007697"
                 android:textSize="8pt" />
         </LinearLayout>
 
@@ -75,14 +79,15 @@
                 android:id="@+id/tvdiachi_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_weight="2"
+                android:enabled="false"
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="horizontal"
-                android:textColor="#007697"
-                android:enabled="false"
                 android:textSize="8pt" />
+
             <Button
                 android:id="@+id/btnTim"
                 android:layout_width="60dp"
@@ -120,9 +125,9 @@
             android:overScrollMode="always"
             android:scrollbarStyle="insideInset"
             android:scrollbars="horizontal"
-            android:textColor="#007697"
             android:textSize="8pt"
-            android:inputType="phone"/>
+            android:inputType="phone"
+            android:layout_marginLeft="10dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -137,6 +142,7 @@
             android:id="@+id/tvnote_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:lines="3"
             android:overScrollMode="always"
             android:scrollbarStyle="insideInset"
