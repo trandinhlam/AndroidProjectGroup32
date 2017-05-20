@@ -1,8 +1,14 @@
 package com.example.thekiet.loactionsaver;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         mViewPager = (ViewPager) findViewById(R.id.container);
+        checkLocationPermission();
         setupViewPager(mViewPager);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -153,5 +160,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(this).setTitle("Bật GPS").setMessage("Hãy bật GPS để sử dụng chức năng này!")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 104);
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 104);
+            }
+        }
     }
 }

@@ -354,7 +354,7 @@ public class TimViTri extends FragmentActivity implements OnMapReadyCallback, Go
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(getApplication(), "Thêm vào danh bạ (sqlite)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), "Thêm vào danh bạ", Toast.LENGTH_SHORT).show();
                 Intent myIntent = new Intent(getApplication(), AddDanhBa.class);
 
                 Bundle extras = new Bundle();

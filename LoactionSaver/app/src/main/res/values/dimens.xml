@@ -8,6 +8,7 @@
     <dimen name="Itemtextsize">30dp</dimen>
     <dimen name="Itemtextsize2">20dp</dimen>
     <dimen name="titleTextSize">30dp</dimen>
+
     <dimen name="edittextwidth">250dp</dimen>
     <dimen name="marginstartbutton">100dp</dimen>
     <dimen name="imagesize">200dp</dimen>
