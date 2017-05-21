@@ -58,6 +58,8 @@
 
         <activity
             android:name=".TimViTri"></activity>
+        <activity
+            android:name=".CapNhatViTri"></activity>
 
         <activity
             android:name=".ChiDuong"></activity>

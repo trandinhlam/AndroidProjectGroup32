@@ -253,7 +253,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_LONGTITUDE,item.getLongtitude());
         values.put(COLUMN_PHONE,item.getSDT());
         values.put(COLUMN_NOTE,item.getNote());
-
+        values.put(COLUMN_IMAGE,item.getHinhAnh());
 
         // updating row
         int kq= db.update(TABLE_DanhBa, values, COLUMN_ID + " = ?",

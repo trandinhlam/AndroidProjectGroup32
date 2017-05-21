@@ -10,6 +10,7 @@
     <dimen name="titleTextSize">30dp</dimen>
 
     <dimen name="edittextwidth">250dp</dimen>
+    <dimen name="spaceforbuttonimage">280dp</dimen>
     <dimen name="marginstartbutton">100dp</dimen>
     <dimen name="imagesize">200dp</dimen>
 </resources>
