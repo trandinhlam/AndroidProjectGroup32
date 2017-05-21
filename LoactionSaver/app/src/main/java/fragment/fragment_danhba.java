@@ -41,6 +41,10 @@ public class fragment_danhba extends Fragment {
     private static final int MENU_ITEM_ADDLIKELIST =222 ;
     private static final int MENU_ITEM_EDIT =333 ;
     private static final int MENU_ITEM_DELETE =444 ;
+
+
+    private static final int MENU_ITEM_SHARE =555 ;
+
     private static final int MY_REQUEST_CODE =10 ;
 
     private MainActivity mainactivity;
@@ -149,8 +153,9 @@ public class fragment_danhba extends Fragment {
         // groupId, itemId, order, title
         menu.add(0, MENU_ITEM_VIEW , 0, "Chi tiết");
         menu.add(0, MENU_ITEM_ADDLIKELIST , 1, "Thêm vào yêu thích");
-        menu.add(0, MENU_ITEM_EDIT , 1, "Sửa");
-        menu.add(0, MENU_ITEM_DELETE, 2, "Xóa");
+        menu.add(0, MENU_ITEM_SHARE , 2, "Chia sẻ");
+        menu.add(0, MENU_ITEM_EDIT , 3, "Sửa");
+        menu.add(0, MENU_ITEM_DELETE, 4, "Xóa");
     }
 
     private void deleteItem(ItemDanhBa itemxoa)  {
@@ -199,6 +204,17 @@ public class fragment_danhba extends Fragment {
                     }
                 }
                 break;
+
+            case MENU_ITEM_SHARE:
+            {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction("android.intent.action.SEND");
+                shareIntent.putExtra("android.intent.extra.TEXT", "Tên : " + duocchon.getTen() + "\nĐịa Chỉ : " + duocchon.getDiaChi()+
+                "\nSĐT : "+ duocchon.getSDT() + "\nNote : " + duocchon.getNote());
+                shareIntent.setType("text/plain");
+                this.startActivity(Intent.createChooser(shareIntent, "Chia sẻ"));
+            }
+            break;
             case MENU_ITEM_EDIT:
                 {
                     UpDateItem(duocchon);
