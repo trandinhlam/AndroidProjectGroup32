@@ -245,7 +245,7 @@ public class AddDanhBa extends Activity {
 
         if (requestCode == RESULT_CAMERA2_IMAGE && resultCode == RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-           photo = Bitmap.createScaledBitmap(photo, 150,150, true);
+            photo = Bitmap.createScaledBitmap(photo, 150,150, true);
             Integer a =  photo.getByteCount();
             try {
                 Toast.makeText(this, a.toString(), Toast.LENGTH_SHORT).show();
