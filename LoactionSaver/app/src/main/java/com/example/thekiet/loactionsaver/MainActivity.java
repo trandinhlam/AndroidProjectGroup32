@@ -94,7 +94,16 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this.getApplicationContext(), "Settting", Toast.LENGTH_SHORT).show();
+            // 1. Instantiate an AlertDialog.Builder with its constructor
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            // 2. Chain together various setter methods to set the dialog characteristics
+            builder.setMessage("1412271 - Trương Thế Kiệt\n1412279 - Trần Đình Lâm\n1412294 - Nguyễn Thiên Long")
+                    .setTitle("About");
+
+            // 3. Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+            dialog.show();
             return true;
         }
 
